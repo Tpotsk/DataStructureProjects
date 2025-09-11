@@ -1,3 +1,10 @@
+/*
+    InicializarFila() -> endereço da memória alocada
+    FilaVazia() -> 1 se estiver vazia, 0 o contrário
+    InserirNaFila(Fila *f, Pet novo)
+    RemoverDaFila(Fila *f) -> retorna o que foi removido
+*/
+
 #ifndef FILA_H_INCLUDED
 #define FILA_H_INCLUDED
 
@@ -48,7 +55,15 @@ void InserirNaFila(Fila *f, Pet novo){
         f->fim = aux;
     }
 
-    f->fim = novo;
+    f->fim = aux;
+}
+
+Pet RemoverDaFila(Fila *f){
+    Nos *aux = f->ini;
+    Pet temp = aux->info;
+    f->ini = f->ini->prox;
+    free(aux);
+    return temp;
 }
 
 #endif // FILA_H_INCLUDED
