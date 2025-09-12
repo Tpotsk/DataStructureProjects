@@ -4,13 +4,13 @@
 #include <string.h>
 #include "FILA.h"
 
-void ExibirFilaDump(Fila *f){
+void ExibirFila(Fila *f){
     Nos *aux = f->ini;
     Pet t;
 
     while(aux != NULL){
         t = aux->info;
-        printf("%d - %s - %s - %d/%d/%d - %d\n", t.id, t.nome, t.especie, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.idade);
+        printf("| %3d | %-50s | %-20s | %2d/%2d/%4d | %2d |\n", t.id, t.nome, t.especie, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.idade);
         aux = aux->prox;
     }
 }
@@ -85,12 +85,12 @@ int main(){
         InserirNaFila(fila_dump, dump_pet);
     }
 
-    ExibirFilaDump(fila_dump);
+    ExibirFila(fila_dump);
 
     Fila *teste_busca = BuscarNomeNaFila(fila_dump, "Lorem Ipsum");
 
     printf("\n\nresultado da busca por nome\n");
-    ExibirFilaDump(teste_busca);
+    ExibirFila(teste_busca);
 
     printf("\n\nresultado da busca por id\n");
     Pet *dump_pet2 = BuscarIDNaFila(fila_dump, 100);
