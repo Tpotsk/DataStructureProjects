@@ -68,4 +68,17 @@ Pet RemoverDaFila(Fila *f){
     free(aux);
     return temp;
 }
+
+Fila *LiberarFila(Fila *f){
+    Nos *aux = f->ini;
+
+    while(aux != NULL){
+        f->ini = f->ini->prox;
+        free(aux);
+        aux = f->ini;
+    }
+
+    free(f);
+    return NULL;
+}
 #endif // FILA_H_INCLUDED
