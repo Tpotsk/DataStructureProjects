@@ -52,7 +52,7 @@ void InserirNaFila(Fila *f, Pet novo){
     if(f->ini == NULL){
         f->ini = aux;
     }else{
-        f->fim = aux;
+        f->fim->prox = aux;
     }
 
     f->fim = aux;
@@ -62,8 +62,10 @@ Pet RemoverDaFila(Fila *f){
     Nos *aux = f->ini;
     Pet temp = aux->info;
     f->ini = f->ini->prox;
+
+    if(f->ini == NULL) f->fim = NULL;
+
     free(aux);
     return temp;
 }
-
 #endif // FILA_H_INCLUDED
