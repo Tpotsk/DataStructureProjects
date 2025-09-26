@@ -10,13 +10,13 @@ void ExibirFila(Fila *f){
 
     while(aux != NULL){
         t = aux->info;
-        printf("| %3d | %-50s | %-20s | %2d/%2d/%4d | %2d |\n", t.id, t.nome, t.especie, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.idade);
+        printf("| %3d | %-50s | %-20s | %2d | %2d/%2d/%4d | %d |\n", t.id, t.nome, t.especie, t.idade, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.prioridade);
         aux = aux->prox;
     }
 }
 
-void ExibirPetDump(Pet t){
-    printf("%d - %s - %s - %d/%d/%d - %d\n", t.id, t.nome, t.especie, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.idade);
+void ExibirPet(Pet t){
+    printf("%d - %s - %s - %d - %d/%d/%d - %d \n", t.id, t.nome, t.especie, t.idade, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.prioridade);
 }
 
 Pet *BuscarIDNaFila(Fila *f, int id){
@@ -81,6 +81,7 @@ int main(){
         dump_pet.data_nasc.mes = (rand() % 11) + 1;
         dump_pet.data_nasc.ano = 2010 + rand() % 10;
         dump_pet.idade = 2025 - dump_pet.data_nasc.ano;
+        dump_pet.prioridade = rand() % 2;
 
         InserirNaFila(fila_dump, dump_pet);
     }
