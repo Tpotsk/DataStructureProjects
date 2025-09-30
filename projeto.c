@@ -2,7 +2,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <conio.h>
 #include "FILA.h"
+
+#define NEGRITO "\033[1;37m"
+#define AZUL "\033[1;34m"
+#define VERDE "\033[1;32m"
+#define VERMELHO "\033[1;31m"
+#define CIANO "\033[1;36m"
+#define RESET "\033[0m"
 
 void ExibirFila(Fila *f){
     Nos *aux = f->ini;
@@ -54,16 +62,79 @@ Fila *BuscarNomeNaFila(Fila *f, char *nome){
     return resultado;
 }
 
-int main(){
+void cabecalho(){
+    printf(RESET " ___________________________________________________________________\n");
+    printf("|   " CIANO "Sistema de Registro Veterinario ~ Bem vindo(a)" RESET "                  |\n");
+    printf("|___________________________________________________________________|");
+}
 
+void menu_opcoes(){
+    printf(RESET "\n ___________________________________________________________________");
+    printf("\n| Serviços:                                                         |\n");
+    printf("|           "CIANO"( 1 )"RESET" Inserir pet na fila de atendimento                |\n");
+    printf("|           "CIANO"( 2 )"RESET" Atender pet (remover da fila de atendimento)      |\n");
+    printf("|           "CIANO"( 3 )"RESET" Buscar pet                                        |\n");
+    printf("|           "CIANO"( 4 )"RESET" Imprimir fila de atendimento                      |\n");
+    printf("|           "CIANO"( 5 )"RESET" Proximo atendimento                               |\n");
+    printf("|           "CIANO"( 6 )"RESET" Pets ja atendidos                                 |\n");
+    printf("|                                                                   |\n");
+    printf("|           "VERMELHO"( 5 )"RESET" Finalizar sistema                                 |\n");
+    printf("|                                                                   |\n");
+    printf("| pressione o ID do servico desejado                                |\n");
+    printf("|___________________________________________________________________|");
+}
+
+int main(){
     Fila *fila_normal = InicializarFila();
     Fila *fila_emergente = InicializarFila();
+    Fila *fila_antendidos = InicializarFila();
+
+    int controle = 1;
+    char input_servico;
 
     int min = 100, max=999;
     int rnum;
     srand(time(NULL));
 
+    while(controle){
+        do{
+            input_servico = getch();
+            controle = input_servico - '0';
+            printf("%d", controle);
+        }while(controle < 0 || controle > 7);
 
+        switch(controle){
+            case 1:
+                printf("serviço 1\n");
+                break;
+
+            case 2:
+                printf("serviço 2\n");
+                break;
+
+            case 3:
+                printf("serviço 3\n");
+                break;
+
+            case 4:
+                printf("serviço 4\n");
+                break;
+
+            case 5:
+                printf("serviço 5\n");
+                break;
+
+            case 6:
+                printf("serviço 6\n");
+                break;
+
+            case 7:
+                controle = 0;
+                break;
+        }
+    }
+
+    /*
     //data dump
     Pet dump_pet;
     Fila *fila_dump = InicializarFila();
@@ -85,15 +156,5 @@ int main(){
 
         InserirNaFila(fila_dump, dump_pet);
     }
-
-    ExibirFila(fila_dump);
-
-    Fila *teste_busca = BuscarNomeNaFila(fila_dump, "Lorem Ipsum");
-
-    printf("\n\nresultado da busca por nome\n");
-    ExibirFila(teste_busca);
-
-    printf("\n\nresultado da busca por id\n");
-    Pet *dump_pet2 = BuscarIDNaFila(fila_dump, 100);
-    ExibirPetDump(*dump_pet2);
+    */
 }
