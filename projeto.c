@@ -4,6 +4,13 @@
 #include <string.h>
 #include "FILA.h"
 
+#define NEGRITO "\033[1;37m"
+#define AZUL "\033[1;34m"
+#define VERDE "\033[1;32m"
+#define VERMELHO "\033[1;31m"
+#define CIANO "\033[1;36m"
+#define RESET "\033[0m"
+
 void ExibirFila(Fila *f){
     Nos *aux = f->ini;
     Pet t;
@@ -54,6 +61,28 @@ Fila *BuscarNomeNaFila(Fila *f, char *nome){
     return resultado;
 }
 
+void cabecalho(){
+    printf(RESET " ___________________________________________________________________\n");
+    printf("|   " CIANO "Sistema de Registro Veterinario ~ Bem vindo(a)" RESET "                  |\n");
+    printf("|___________________________________________________________________|");
+}
+
+void menu_opcoes(){
+    printf(RESET "\n ___________________________________________________________________");
+    printf("\n| Serviços:                                                         |\n");
+    printf("|           "CIANO"( 1 )"RESET" Inserir pet na fila de atendimento                |\n");
+    printf("|           "CIANO"( 2 )"RESET" Atender pet (remover da fila de atendimento)      |\n");
+    printf("|           "CIANO"( 3 )"RESET" Buscar pet                                        |\n");
+    printf("|           "CIANO"( 4 )"RESET" Imprimir fila de atendimento                      |\n");
+    printf("|           "CIANO"( 5 )"RESET" Proximo atendimento                               |\n");
+    printf("|           "CIANO"( 6 )"RESET" Pets ja atendidos                                 |\n");
+    printf("|                                                                   |\n");
+    printf("|           "VERMELHO"( 5 )"RESET" Finalizar sistema                                 |\n");
+    printf("|                                                                   |\n");
+    printf("| pressione o ID do servico desejado                                |\n");
+    printf("|___________________________________________________________________|");
+}
+
 int main(){
 
     Fila *fila_normal = InicializarFila();
@@ -63,39 +92,50 @@ int main(){
     int rnum;
     srand(time(NULL));
 
+    int controle = 1;
+    char input_servico;
 
-    //data dump
-    Pet dump_pet;
-    Fila *fila_dump = InicializarFila();
-    rnum = 100;
+    cabecalho();
+    menu_opcoes();
+    while(controle){
+        do{
+            input_servico = getchar();
+            controle = input_servico - '0';
+            printf("%d", controle);
+        }while(controle < 0 || controle > 7);
 
-    for(int i = 0; i < 10; i++){
-        while(BuscarIDNaFila(fila_dump, rnum) != NULL){
-            rnum = min + rand() % (max - min + 1);
+        switch(controle){
+            case 1:
+                printf("serviço 1\n");
+                break;
+
+            case 2:
+                printf("serviço 2\n");
+                break;
+
+            case 3:
+                printf("serviço 3\n");
+                break;
+
+            case 4:
+                printf("serviço 4\n");
+                break;
+
+            case 5:
+                printf("serviço 5\n");
+                break;
+
+            case 6:
+                printf("serviço 6\n");
+                break;
+
+            case 7:
+                controle = 0;
+                break;
+            default:
+                printf("Digite uma opção válida!\n");
         }
-
-        dump_pet.id = rnum;
-        strcpy(dump_pet.nome, "Lorem Ipsum");
-        strcpy(dump_pet.especie, "Dolor Astmet");
-        dump_pet.data_nasc.dia = (rand() % 30) + 1;
-        dump_pet.data_nasc.mes = (rand() % 11) + 1;
-        dump_pet.data_nasc.ano = 2010 + rand() % 10;
-        dump_pet.idade = 2025 - dump_pet.data_nasc.ano;
-        dump_pet.prioridade = rand() % 2;
-
-        InserirNaFila(fila_dump, dump_pet);
     }
-
-    ExibirFila(fila_dump);
-
-    Fila *teste_busca = BuscarNomeNaFila(fila_dump, "Lorem Ipsum");
-
-    printf("\n\nresultado da busca por nome\n");
-    ExibirFila(teste_busca);
-
-    printf("\n\nresultado da busca por id\n");
-    Pet *dump_pet2 = BuscarIDNaFila(fila_dump, 100);
-    ExibirPet(*dump_pet2);
 }
 
 
