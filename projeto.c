@@ -95,7 +95,7 @@ int main(){
 
     printf("\n\nresultado da busca por id\n");
     Pet *dump_pet2 = BuscarIDNaFila(fila_dump, 100);
-    ExibirPetDump(*dump_pet2);
+    ExibirPet(*dump_pet2);
 }
 
 
@@ -106,13 +106,13 @@ void PrintAtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
     { // prioridade para emergência
         Pet atendido_e = Emergencia->ini->info;
         printf("\nAtendendo (EMERGÊNCIA):\n");
-        ExibirPet(atendido);
+        ExibirPet(atendido_e);
     }
     else if(!FilaVazia(Normal))
     {//normais logo em seguida, caso não tenham emergencias
         Pet atendido_n = Normal->ini->info;
         printf("\nAtendendo (NORMAL):\n");
-        ExibirPet(atendido);
+        ExibirPet(atendido_n);
     }
     else
     {
