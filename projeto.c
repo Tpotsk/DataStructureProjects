@@ -47,10 +47,10 @@ void InserirPet(Fila * normal, Fila *emergencia ){
 
     novo.id = IdAleatorio(normal,emergencia);
     printf("O id do pet é: %d", novo.id);
-    buffer[strcspn(buffer, "\n")] = 0;
+
     printf("Digite o nome do Pet: \n");
+
     fgets(novo.nome,50,stdin);
-    buffer[strcspn(buffer, "\n")] = 0;
     printf("Digite a espécie: \n");
     fgets(novo.especie,50,stdin);
     novo.data_nasc = criarData();
@@ -144,7 +144,7 @@ void AtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
 }
 
 
-void ImprimirRelatorio(Fila *Emergencia, Fila *Normal)
+void ImprimirRelatorio(Fila * Normal, Fila *Emergencia)
 {
     printf("\n--- FILA EMERGÊNCIA ---\n");
     ExibirFila(Emergencia);
