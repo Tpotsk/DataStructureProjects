@@ -184,7 +184,7 @@ void MenuOpcoes(){
     tabelaLinha(0xBA, ' ', 0xBA, 69);
     printf("%c           "VERMELHO"( 7 )"RESET" Finalizar sistema                                 %c", 0xBA, 0xBA);
     tabelaLinha(0xC8, 0xCD, 0xBC, 69);
-    printf("Pressione o ID do servico desejado: ");
+    printf("\nPressione o ID do servico desejado: ");
 }
 
 void ExibirFila(Fila *f){
@@ -204,7 +204,7 @@ void ExibirFila(Fila *f){
 
     while(aux != NULL){
         t = aux->info;
-        temp = (t.prioridade == 1)? "Emergente": "Normal";
+        temp = (t.prioridade == 1)? VERMELHO"Emergente ": CIANO"Normal    ";
 
         sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
         sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
@@ -213,7 +213,7 @@ void ExibirFila(Fila *f){
         sequenciaDeChar(0xC5, 0xC4, 0xC4, 13);
         sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
 
-        printf("\n%c %3d  %c %-50s %c %-20s %c %-3d %c %2d/%2d/%4d %c %-10s %c\n", 0xB3, t.id, 0xB3, t.nome, 0xB3, t.especie, 0xB3, t.idade, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, temp, 0xB3);
+        printf("\n%c %3d  %c %-50s %c %-20s %c %-3d %c %2d/%2d/%4d %c %-s"RESET" %c\n", 0xB3, t.id, 0xB3, t.nome, 0xB3, t.especie, 0xB3, t.idade, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, temp, 0xB3);
         aux = aux->prox;
     }
 
@@ -233,9 +233,37 @@ int main(){
     int controle = 1;
     char input_servico;
 
+    int id_busca;
+    char nome_busca[50];
+
     int min = 100, max=999;
     int rnum;
     srand(time(NULL));
+
+    //data dump
+    Pet dump_pet;
+    rnum = 100;
+
+    for(int i = 0; i < 10; i++){
+        while(BuscarIDNaFila(fila_emergente, rnum) != NULL || BuscarIDNaFila(fila_normal, rnum) != NULL || BuscarIDNaFila(fila_antendidos, rnum) != NULL){
+            rnum = min + rand() % (max - min + 1);
+        }
+
+        dump_pet.id = rnum;
+        strcpy(dump_pet.nome, "Lorem");
+        strcpy(dump_pet.especie, "Dolor Astmet");
+        dump_pet.data_nasc.dia = (rand() % 30) + 1;
+        dump_pet.data_nasc.mes = (rand() % 11) + 1;
+        dump_pet.data_nasc.ano = 2010 + rand() % 10;
+        dump_pet.idade = 2025 - dump_pet.data_nasc.ano;
+        dump_pet.prioridade = rand() % 2;
+
+        if(dump_pet.prioridade == 1){
+            InserirNaFila(fila_emergente, dump_pet);
+        } else {
+            InserirNaFila(fila_normal, dump_pet);
+        }
+    }
 
     while(controle){
         cabecalho();
@@ -264,14 +292,77 @@ int main(){
 
             case 3:
                 system("cls");
-                printf("serviço 3\n");
+                cabecalho();
+
+                printf("\nRealizar busca atraves do: \n\t"CIANO"( 1 )"NEGRITO" ID\n\t"CIANO"( 2 )"NEGRITO" NOME\n\n\t"VERMELHO"( OUTRO )"NEGRITO" CANCELAR"RESET"\n\n> ");
+
+                input_servico = getch();
+                controle = input_servico - '0';
+
+
+                system("cls");
+                cabecalho();
+
+                if(controle == 1){
+                    printf("\nInsira o ID (3 digitos numericos, entre 100 e 999) que deseja pesquisar: ");
+                    scanf("%d", &id_busca);
+
+                    while(id_busca < 100 || id_busca > 999){
+                        printf("\nID inserido inválido. Insira novamente: ");
+                        scanf("%d", &id_busca);
+                    }
+
+                    system("cls");
+                    cabecalho();
+
+                    if(BuscarIDNaFila(fila_normal, id_busca) != NULL){
+                        ExibirPet(*BuscarIDNaFila(fila_normal, id_busca));
+                    } else if(BuscarIDNaFila(fila_emergente, id_busca) != NULL){
+                        ExibirPet(*BuscarIDNaFila(fila_emergente, id_busca));
+                    } else if(BuscarIDNaFila(fila_antendidos, id_busca) != NULL){
+                        ExibirPet(*BuscarIDNaFila(fila_antendidos, id_busca));
+                    } else {
+                        printf("\nNenhum resultado foi encontrado.");
+                    }
+                }
+
+                if(controle == 2){
+                    printf("\nInsira o Nome que deseja pesquisar: ");
+                    scanf("%s", &nome_busca);
+
+                    if(BuscarNomeNaFila(fila_normal, nome_busca) != NULL){
+                        ExibirFila(BuscarNomeNaFila(fila_normal, nome_busca));
+                        printf("\n");
+                    }
+
+                    if(BuscarNomeNaFila(fila_emergente, nome_busca) != NULL){
+                        ExibirFila(BuscarNomeNaFila(fila_emergente, nome_busca));
+                        printf("\n");
+                    }
+
+                    if(BuscarNomeNaFila(fila_antendidos, nome_busca) != NULL){
+                        ExibirFila(BuscarNomeNaFila(fila_antendidos, nome_busca));
+                        printf("\n");
+                    }
+                }
+
                 system("pause");
                 system("cls");
                 break;
 
             case 4:
                 system("cls");
-                printf("serviço 4\n");
+                cabecalho();
+
+                if(FilaVazia(fila_emergente) && FilaVazia(fila_normal)){
+                    printf("\nNao ha pets nas filas de atendimento.\n\n");
+                } else {
+                    ExibirFila(fila_emergente);
+                    printf("\n");
+                    ExibirFila(fila_normal);
+                    printf("\n\n");
+                }
+
                 system("pause");
                 system("cls");
                 break;
@@ -285,7 +376,14 @@ int main(){
 
             case 6:
                 system("cls");
-                printf("serviço 6\n");
+                cabecalho();
+
+                if(FilaVazia(fila_antendidos)){
+                    printf("\nNenhum pet foi atendido ate o momento.\n\n");
+                } else {
+                    ExibirFila(fila_antendidos);
+                }
+
                 system("pause");
                 system("cls");
                 break;
