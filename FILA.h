@@ -17,7 +17,7 @@ typedef struct data{
 typedef struct pet{
     int id;
     char nome[50];
-    char especie[20];
+    char especie[30];
     int idade;
     Data data_nasc;
     int prioridade;

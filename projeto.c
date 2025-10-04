@@ -13,7 +13,6 @@
 #define RESET "\033[0m"
 
 // Funções visuais
-
 void tabelaLinha(char prim, char meio, char ult, int largura){
     printf("\n%c", prim);
     for(int i = 0; i < largura - 2; i++) printf("%c", meio);
@@ -57,11 +56,11 @@ void ExibirFila(Fila *f){
 
     sequenciaDeChar(0xDA, 0xC4, 0xC4, 7);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
-    sequenciaDeChar(0xC2, 0xC4, 0xC4, 23);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 33);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 6);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 13);
     sequenciaDeChar(0xC2, 0xC4, 0xBF, 14);
-    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME"RESET"                                               %c "NEGRITO"ESPECIE"RESET"              %c "NEGRITO"IDD"RESET" %c "NEGRITO"NASCIMENTO"RESET" %c "NEGRITO"PRIORIDADE"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME"RESET"                                               %c "NEGRITO"ESPECIE"RESET"                        %c "NEGRITO"IDD"RESET" %c "NEGRITO"NASCIMENTO"RESET" %c "NEGRITO"PRIORIDADE"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
 
     while(aux != NULL){
         t = aux->info;
@@ -69,25 +68,58 @@ void ExibirFila(Fila *f){
 
         sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
         sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
-        sequenciaDeChar(0xC5, 0xC4, 0xC4, 23);
+        sequenciaDeChar(0xC5, 0xC4, 0xC4, 33);
         sequenciaDeChar(0xC5, 0xC4, 0xC4, 6);
         sequenciaDeChar(0xC5, 0xC4, 0xC4, 13);
         sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
 
-        printf("\n%c %3d  %c %-50s %c %-20s %c %-3d %c %2d/%2d/%4d %c %-s"RESET" %c\n", 0xB3, t.id, 0xB3, t.nome, 0xB3, t.especie, 0xB3, t.idade, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, temp, 0xB3);
+        printf("\n%c %3d  %c %-50s %c %-30s %c %-3d %c %2d/%2d/%4d %c %-s"RESET" %c\n", 0xB3, t.id, 0xB3, t.nome, 0xB3, t.especie, 0xB3, t.idade, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, temp, 0xB3);
         aux = aux->prox;
     }
 
     sequenciaDeChar(0xC0, 0xC4, 0xC4, 7);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
-    sequenciaDeChar(0xC1, 0xC4, 0xC4, 23);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 33);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 6);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 13);
     sequenciaDeChar(0xC1, 0xC4, 0xD9, 14);
 }
 
 void ExibirPet(Pet t){
-    printf("%d - %s - %s - %d - %d/%d/%d - %d \n", t.id, t.nome, t.especie, t.idade, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.prioridade);
+    char *temp = (t.prioridade == 1)? VERMELHO"Emergente                              ": CIANO"Normal                                 ";
+
+    sequenciaDeChar(0xDA, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 42);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 5);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 7);
+
+    printf("\n%c"NEGRITO" ATENDIMENTO "RESET"%c %s"RESET" %c"NEGRITO" ID "RESET"%c %d %c\n", 0xB3, 0xB3, temp, 0xB3, 0xB3, t.id, 0xB3);
+
+    sequenciaDeChar(0xC3, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 42);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 5);
+    sequenciaDeChar(0xC1, 0xC4, 0xB4, 7);
+
+    printf("\n%c"NEGRITO"        NOME "RESET"%c %-50s"RESET" %c\n", 0xB3, 0xB3, t.nome, 0xB3);
+
+    sequenciaDeChar(0xC3, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC5, 0xC4, 0xB4, 54);
+
+    printf("\n%c"NEGRITO"     ESPECIE "RESET"%c %-50s"RESET" %c\n", 0xB3, 0xB3, t.especie, 0xB3);
+
+    sequenciaDeChar(0xC3, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC5, 0xC4, 0xC2, 22);
+    sequenciaDeChar(0xC4, 0xC4, 0xC2, 8);
+    sequenciaDeChar(0xC4, 0xC4, 0xB4, 24);
+
+    printf("\n%c"NEGRITO"  NASCIMENTO "RESET"%c %2d/%2d/%4d         %c"NEGRITO" IDADE "RESET"%c %-2d ANOS               %c\n",0xB3, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, 0xB3, t.idade, 0xB3);
+
+    sequenciaDeChar(0xC0, 0xC4, 0xC1, 15);
+    sequenciaDeChar(0xC4, 0xC4, 0xC1, 21);
+    sequenciaDeChar(0xC4, 0xC4, 0xC1, 8);
+    sequenciaDeChar(0xC4, 0xC4, 0xD9, 24);
+
+    printf("\n");
 }
 
 // Funções lógicas
