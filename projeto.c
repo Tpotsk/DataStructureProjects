@@ -12,11 +12,86 @@
 #define CIANO "\033[1;36m"
 #define RESET "\033[0m"
 
-// Funções lógicas
+// Funções visuais
+
+void tabelaLinha(char prim, char meio, char ult, int largura){
+    printf("\n%c", prim);
+    for(int i = 0; i < largura - 2; i++) printf("%c", meio);
+    printf("%c\n", ult);
+}
+
+void sequenciaDeChar(char prim, char meio, char ult, int largura){
+    printf("%c", prim);
+    for(int i = 0; i < largura - 2; i++) printf("%c", meio);
+    printf("%c", ult);
+}
+
+void cabecalho(){
+    tabelaLinha(0xC9, 0xCD, 0xBB, 69);
+    printf("%c   "NEGRITO"Sistema de Registro Veterinario ~ Bem vindo(a)"RESET"                  %c", 0xBA, 0xBA);
+    tabelaLinha(0xC8, 0xCD, 0xBC, 69);
+}
+
+void MenuOpcoes(){
+    tabelaLinha(0xC9, 0xCD, 0xBB, 69);
+    printf("%c "NEGRITO"Servicos:"RESET"                                                         %c", 0xBA, 0xBA);
+    tabelaLinha(0xCC, 0xCD, 0xB9, 69);
+    printf("%c           "CIANO"( 1 )"RESET" Inserir pet na fila de atendimento                %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 2 )"RESET" Atender pet (remover da fila de atendimento)      %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 3 )"RESET" Buscar pet                                        %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 4 )"RESET" Imprimir fila de atendimento                      %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 5 )"RESET" Proximo atendimento                               %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 6 )"RESET" Pets ja atendidos                                 %c", 0xBA, 0xBA);
+    tabelaLinha(0xBA, ' ', 0xBA, 69);
+    printf("%c           "VERMELHO"( 7 )"RESET" Finalizar sistema                                 %c", 0xBA, 0xBA);
+    tabelaLinha(0xC8, 0xCD, 0xBC, 69);
+    printf("\nPressione o ID do servico desejado: ");
+}
+
+void ExibirFila(Fila *f){
+    if(f == NULL || FilaVazia(f)) return;
+
+    Nos *aux = f->ini;
+    Pet t;
+    char *temp;
+
+    sequenciaDeChar(0xDA, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 23);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 6);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 13);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 14);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME"RESET"                                               %c "NEGRITO"ESPECIE"RESET"              %c "NEGRITO"IDD"RESET" %c "NEGRITO"NASCIMENTO"RESET" %c "NEGRITO"PRIORIDADE"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+
+    while(aux != NULL){
+        t = aux->info;
+        temp = (t.prioridade == 1)? VERMELHO"Emergente ": CIANO"Normal    ";
+
+        sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
+        sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
+        sequenciaDeChar(0xC5, 0xC4, 0xC4, 23);
+        sequenciaDeChar(0xC5, 0xC4, 0xC4, 6);
+        sequenciaDeChar(0xC5, 0xC4, 0xC4, 13);
+        sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
+
+        printf("\n%c %3d  %c %-50s %c %-20s %c %-3d %c %2d/%2d/%4d %c %-s"RESET" %c\n", 0xB3, t.id, 0xB3, t.nome, 0xB3, t.especie, 0xB3, t.idade, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, temp, 0xB3);
+        aux = aux->prox;
+    }
+
+    sequenciaDeChar(0xC0, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 23);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 6);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 13);
+    sequenciaDeChar(0xC1, 0xC4, 0xD9, 14);
+}
+
 void ExibirPet(Pet t){
     printf("%d - %s - %s - %d - %d/%d/%d - %d \n", t.id, t.nome, t.especie, t.idade, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, t.prioridade);
 }
 
+// Funções lógicas
+// o retorno da função ser um ponteiro permite que haja o retorno NULL
 Pet *BuscarIDNaFila(Fila *f, int id){
     if(FilaVazia(f)) return NULL;
 
@@ -88,7 +163,6 @@ void AtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
     }
 }
 
-
 void ImprimirRelatorio(Fila *Emergencia, Fila *Normal)
 {
     printf("\n--- FILA EMERGÊNCIA ---\n");
@@ -97,7 +171,6 @@ void ImprimirRelatorio(Fila *Emergencia, Fila *Normal)
     printf("\n--- FILA NORMAL ---\n");
     ExibirFila(Normal);
 }
-
 
 void ProximoAtendido(Fila *Emergencia, Fila *Normal)
 {
@@ -152,79 +225,6 @@ int IdAleatorio(Fila *Emergencia, Fila *Normal)
     return gerado;
 }
 
-// Funções visuais
-void tabelaLinha(char prim, char meio, char ult, int largura){
-    printf("\n%c", prim);
-    for(int i = 0; i < largura - 2; i++) printf("%c", meio);
-    printf("%c\n", ult);
-}
-
-void sequenciaDeChar(char prim, char meio, char ult, int largura){
-    printf("%c", prim);
-    for(int i = 0; i < largura - 2; i++) printf("%c", meio);
-    printf("%c", ult);
-}
-
-void cabecalho(){
-    tabelaLinha(0xC9, 0xCD, 0xBB, 69);
-    printf("%c   "NEGRITO"Sistema de Registro Veterinario ~ Bem vindo(a)"RESET"                  %c", 0xBA, 0xBA);
-    tabelaLinha(0xC8, 0xCD, 0xBC, 69);
-}
-
-void MenuOpcoes(){
-    tabelaLinha(0xC9, 0xCD, 0xBB, 69);
-    printf("%c "NEGRITO"Servicos:"RESET"                                                         %c", 0xBA, 0xBA);
-    tabelaLinha(0xCC, 0xCD, 0xB9, 69);
-    printf("%c           "CIANO"( 1 )"RESET" Inserir pet na fila de atendimento                %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 2 )"RESET" Atender pet (remover da fila de atendimento)      %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 3 )"RESET" Buscar pet                                        %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 4 )"RESET" Imprimir fila de atendimento                      %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 5 )"RESET" Proximo atendimento                               %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 6 )"RESET" Pets ja atendidos                                 %c", 0xBA, 0xBA);
-    tabelaLinha(0xBA, ' ', 0xBA, 69);
-    printf("%c           "VERMELHO"( 7 )"RESET" Finalizar sistema                                 %c", 0xBA, 0xBA);
-    tabelaLinha(0xC8, 0xCD, 0xBC, 69);
-    printf("\nPressione o ID do servico desejado: ");
-}
-
-void ExibirFila(Fila *f){
-    if(FilaVazia(f)) return;
-
-    Nos *aux = f->ini;
-    Pet t;
-    char *temp;
-
-    sequenciaDeChar(0xDA, 0xC4, 0xC4, 7);
-    sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
-    sequenciaDeChar(0xC2, 0xC4, 0xC4, 23);
-    sequenciaDeChar(0xC2, 0xC4, 0xC4, 6);
-    sequenciaDeChar(0xC2, 0xC4, 0xC4, 13);
-    sequenciaDeChar(0xC2, 0xC4, 0xBF, 14);
-    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME"RESET"                                               %c "NEGRITO"ESPECIE"RESET"              %c "NEGRITO"IDD"RESET" %c "NEGRITO"NASCIMENTO"RESET" %c "NEGRITO"PRIORIDADE"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
-
-    while(aux != NULL){
-        t = aux->info;
-        temp = (t.prioridade == 1)? VERMELHO"Emergente ": CIANO"Normal    ";
-
-        sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
-        sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
-        sequenciaDeChar(0xC5, 0xC4, 0xC4, 23);
-        sequenciaDeChar(0xC5, 0xC4, 0xC4, 6);
-        sequenciaDeChar(0xC5, 0xC4, 0xC4, 13);
-        sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
-
-        printf("\n%c %3d  %c %-50s %c %-20s %c %-3d %c %2d/%2d/%4d %c %-s"RESET" %c\n", 0xB3, t.id, 0xB3, t.nome, 0xB3, t.especie, 0xB3, t.idade, 0xB3, t.data_nasc.dia, t.data_nasc.mes, t.data_nasc.ano, 0xB3, temp, 0xB3);
-        aux = aux->prox;
-    }
-
-    sequenciaDeChar(0xC0, 0xC4, 0xC4, 7);
-    sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
-    sequenciaDeChar(0xC1, 0xC4, 0xC4, 23);
-    sequenciaDeChar(0xC1, 0xC4, 0xC4, 6);
-    sequenciaDeChar(0xC1, 0xC4, 0xC4, 13);
-    sequenciaDeChar(0xC1, 0xC4, 0xD9, 14);
-}
-
 int main(){
     Fila *fila_normal = InicializarFila();
     Fila *fila_emergente = InicializarFila();
@@ -233,14 +233,10 @@ int main(){
     int controle = 1;
     char input_servico;
 
-    int id_busca;
-    char nome_busca[50];
-
+    //data dump
     int min = 100, max=999;
     int rnum;
     srand(time(NULL));
-
-    //data dump
     Pet dump_pet;
     rnum = 100;
 
@@ -250,7 +246,7 @@ int main(){
         }
 
         dump_pet.id = rnum;
-        strcpy(dump_pet.nome, "Lorem");
+        strcpy(dump_pet.nome, "Lorem Ipsum");
         strcpy(dump_pet.especie, "Dolor Astmet");
         dump_pet.data_nasc.dia = (rand() % 30) + 1;
         dump_pet.data_nasc.mes = (rand() % 11) + 1;
@@ -290,15 +286,18 @@ int main(){
                 system("cls");
                 break;
 
-            case 3:
+            case 3: {
+                int id_busca, i, status_busca = 0;
+                char nome_busca[50];
+                Pet *p[3];
+                Fila *l[3];
+
                 system("cls");
                 cabecalho();
 
                 printf("\nRealizar busca atraves do: \n\t"CIANO"( 1 )"NEGRITO" ID\n\t"CIANO"( 2 )"NEGRITO" NOME\n\n\t"VERMELHO"( OUTRO )"NEGRITO" CANCELAR"RESET"\n\n> ");
-
                 input_servico = getch();
                 controle = input_servico - '0';
-
 
                 system("cls");
                 cabecalho();
@@ -306,42 +305,47 @@ int main(){
                 if(controle == 1){
                     printf("\nInsira o ID (3 digitos numericos, entre 100 e 999) que deseja pesquisar: ");
                     scanf("%d", &id_busca);
+                    getchar();
 
                     while(id_busca < 100 || id_busca > 999){
                         printf("\nID inserido inválido. Insira novamente: ");
                         scanf("%d", &id_busca);
                     }
 
-                    system("cls");
-                    cabecalho();
+                    p[0] = BuscarIDNaFila(fila_normal, id_busca);
+                    p[1] = BuscarIDNaFila(fila_emergente, id_busca);
+                    p[2] = BuscarIDNaFila(fila_antendidos, id_busca);
 
-                    if(BuscarIDNaFila(fila_normal, id_busca) != NULL){
-                        ExibirPet(*BuscarIDNaFila(fila_normal, id_busca));
-                    } else if(BuscarIDNaFila(fila_emergente, id_busca) != NULL){
-                        ExibirPet(*BuscarIDNaFila(fila_emergente, id_busca));
-                    } else if(BuscarIDNaFila(fila_antendidos, id_busca) != NULL){
-                        ExibirPet(*BuscarIDNaFila(fila_antendidos, id_busca));
-                    } else {
-                        printf("\nNenhum resultado foi encontrado.");
+                    for(i = 0; i < 3; i++){
+                        if(p[i] != NULL){
+                            ExibirPet(*p[i]);
+                            status_busca = 1;
+                        }
                     }
+
+                    if(!status_busca) printf("\nNenhum resultado foi encontrado. ");
                 }
 
                 if(controle == 2){
                     printf("\nInsira o Nome que deseja pesquisar: ");
-                    scanf("%s", &nome_busca);
 
-                    if(BuscarNomeNaFila(fila_normal, nome_busca) != NULL){
-                        ExibirFila(BuscarNomeNaFila(fila_normal, nome_busca));
+                    fgets(nome_busca, 50, stdin);
+                    nome_busca[strcspn(nome_busca, "\n")] = '\0';
+
+                    l[0] = BuscarNomeNaFila(fila_normal, nome_busca);
+                    l[1] = BuscarNomeNaFila(fila_emergente, nome_busca);
+                    l[2] = BuscarNomeNaFila(fila_antendidos, nome_busca);
+
+                    if(l[0] == NULL && l[1] == NULL && l[2] == NULL){
+                        printf("\nNenhum resultado foi encontrado. ");
                         printf("\n");
-                    }
-
-                    if(BuscarNomeNaFila(fila_emergente, nome_busca) != NULL){
-                        ExibirFila(BuscarNomeNaFila(fila_emergente, nome_busca));
+                    } else {
                         printf("\n");
-                    }
-
-                    if(BuscarNomeNaFila(fila_antendidos, nome_busca) != NULL){
-                        ExibirFila(BuscarNomeNaFila(fila_antendidos, nome_busca));
+                        ExibirFila(l[0]);
+                        printf("\n");
+                        ExibirFila(l[1]);
+                        printf("\n");
+                        ExibirFila(l[2]);
                         printf("\n");
                     }
                 }
@@ -349,8 +353,9 @@ int main(){
                 system("pause");
                 system("cls");
                 break;
+            }
 
-            case 4:
+            case 4: {
                 system("cls");
                 cabecalho();
 
@@ -367,6 +372,8 @@ int main(){
                 system("cls");
                 break;
 
+            }
+
             case 5:
                 system("cls");
                 printf("serviço 5\n");
@@ -374,7 +381,7 @@ int main(){
                 system("cls");
                 break;
 
-            case 6:
+            case 6: {
                 system("cls");
                 cabecalho();
 
@@ -387,6 +394,7 @@ int main(){
                 system("pause");
                 system("cls");
                 break;
+            }
 
             case 7:
                 controle = 0;
