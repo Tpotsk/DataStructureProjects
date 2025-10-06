@@ -341,40 +341,12 @@ int main(){
     int controle = 1;
     char input_servico;
 
-    //data dump
-    int min = 100, max=999;
-    int rnum;
-    srand(time(NULL));
-    Pet dump_pet;
-    rnum = 100;
-
-    for(int i = 0; i < 10; i++){
-        while(BuscarIDNaFila(fila_emergente, rnum) != NULL || BuscarIDNaFila(fila_normal, rnum) != NULL || BuscarIDNaFila(fila_antendidos, rnum) != NULL){
-            rnum = min + rand() % (max - min + 1);
-        }
-
-        dump_pet.id = rnum;
-        strcpy(dump_pet.nome, "Lorem Ipsum");
-        strcpy(dump_pet.especie, "Dolor Astmet");
-        dump_pet.data_nasc.dia = (rand() % 30) + 1;
-        dump_pet.data_nasc.mes = (rand() % 11) + 1;
-        dump_pet.data_nasc.ano = 2010 + rand() % 10;
-        dump_pet.idade = 2025 - dump_pet.data_nasc.ano;
-        dump_pet.prioridade = rand() % 2;
-
-        if(dump_pet.prioridade == 1){
-            InserirNaFila(fila_emergente, dump_pet);
-        } else {
-            InserirNaFila(fila_normal, dump_pet);
-        }
-    }
-
     while(controle){
         cabecalho();
         MenuOpcoes();
 
         do{
-            input_servico = getchar();
+            input_servico = getch();
             controle = input_servico - '0';
             printf("%d", controle);
         }while(controle < 1 || controle > 7);
@@ -382,6 +354,7 @@ int main(){
         switch(controle){
             case 1:
                 system("cls");
+                cabecalho();
                 InserirPet(fila_normal, fila_emergente);
                 system("pause");
                 system("cls");
@@ -404,7 +377,7 @@ int main(){
                 cabecalho();
 
                 printf("\nRealizar busca atraves do: \n\t"CIANO"( 1 )"NEGRITO" ID\n\t"CIANO"( 2 )"NEGRITO" NOME\n\n\t"VERMELHO"( OUTRO )"NEGRITO" CANCELAR"RESET"\n\n> ");
-                input_servico = getchar();
+                input_servico = getch();
                 controle = input_servico - '0';
 
                 system("cls");
@@ -437,6 +410,7 @@ int main(){
                 if(controle == 2){
                     printf("\nInsira o Nome que deseja pesquisar: ");
 
+                    getchar();
                     fgets(nome_busca, 50, stdin);
                     nome_busca[strcspn(nome_busca, "\n")] = '\0';
 
