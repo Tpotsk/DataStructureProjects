@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-//#include <conio.h>
+#include <conio.h>
 #include "FILA.h"
 
 #define NEGRITO "\033[1;37m"

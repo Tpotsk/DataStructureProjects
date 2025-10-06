@@ -1,2 +1,9 @@
 *.o
+<<<<<<< HEAD
 *.exe
+=======
+*.out
+*.exe
+/.vscode
+/build
+>>>>>>> a29f150ccea35c402b33b23f0e0a31ca673d01d0

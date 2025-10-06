@@ -1,6 +1,6 @@
 /*
-    InicializarFila() -> endereço da memória alocada
-    FilaVazia() -> 1 se estiver vazia, 0 o contrário
+    InicializarFila() -> endereï¿½o da memï¿½ria alocada
+    FilaVazia() -> 1 se estiver vazia, 0 o contrï¿½rio
     InserirNaFila(Fila *f, Pet novo)
     RemoverDaFila(Fila *f) -> retorna o que foi removido
 */
@@ -21,7 +21,7 @@ typedef struct pet{
     int idade;
     Data data_nasc;
     int prioridade;
-}Pet;
+} Pet;
 
 typedef struct nos{
     Pet info;
@@ -77,7 +77,6 @@ Fila *LiberarFila(Fila *f){
         free(aux);
         aux = f->ini;
     }
-
     free(f);
     return NULL;
 }
