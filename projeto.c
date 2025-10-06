@@ -4,6 +4,7 @@
 #include <string.h>
 #include <conio.h>
 #include "FILA.h"
+#include <locale.h>
 
 #define NEGRITO "\033[1;37m"
 #define AZUL "\033[1;34m"
@@ -159,28 +160,6 @@ Fila *BuscarNomeNaFila(Fila *f, char *nome){
     return resultado;
 }
 
-//juntar depois
-void PrintAtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
-{
-    if(!FilaVazia(Emergencia))
-    { // prioridade para emerg�ncia
-        Pet atendido_e = Emergencia->ini->info;
-        printf("\nAtendendo (EMERG�NCIA):\n");
-        ExibirPet(atendido_e);
-    }
-    else if(!FilaVazia(Normal))
-    {//normais logo em seguida, caso n�o tenham emergencias
-        Pet atendido_n = Normal->ini->info;
-        printf("\nAtendendo (NORMAL):\n");
-        ExibirPet(atendido_n);
-    }
-    else
-    {
-        printf("\nNenhum pet na fila!\n");
-    }
-}
-
-
 void AtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
 {
     if(!FilaVazia(Emergencia))
@@ -195,6 +174,10 @@ void AtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
         InserirNaFila(Atendidos, atendido_n); // salva no hist�rico
         ExibirPet(atendido_n);
     }
+    else
+    {
+        printf("\nNenhum pet na fila!\n");
+    }
 }
 
 void ImprimirRelatorio(Fila *Emergencia, Fila *Normal)
@@ -206,7 +189,7 @@ void ImprimirRelatorio(Fila *Emergencia, Fila *Normal)
     ExibirFila(Normal);
 }
 
-void ProximoAtendido(Fila *Emergencia, Fila *Normal)
+void ProximoAtender(Fila *Emergencia, Fila *Normal)
 {
     if(!FilaVazia(Emergencia))
     {
@@ -262,24 +245,49 @@ int IdAleatorio(Fila *Emergencia, Fila *Normal)
 Data criarData(){
     int ano,mes,dia;
     Data info;
-    do {
-        printf("Insira o Ano de Nascimento: ");
-        scanf("%i", &ano);
-    } while (ano < 0);
+    struct tm *data_local;
+    time_t segundos;
+    time(&segundos);
+    data_local = localtime(&segundos);
 
     do {
+        printf("<==========================>\n\n");
+        printf("Insira o Ano de Nascimento: ");
+        printf("=> ");
+        scanf("%i", &ano);
+        system("cls");
+    } while (ano < 0 || ano > (data_local->tm_year + 1900));
+
+    do {
+        printf("<==========================>\n\n");
         printf("Insira o M�s de Nascimento: ");
+        printf("=> ");
         scanf("%i", &mes);
+        system("cls");
     } while (mes < 1 || mes > 12);
 
     do {
+        printf("<==========================>\n\n");
         printf("Insira o Dia de Nascimento: ");
+        printf("=> ");
         scanf("%i", &dia);
+        system("cls");
     } while (dia < 0 || dia > 30);
     info.ano = ano;
     info.mes = mes;
     info.dia = dia;
     return info;
+}
+void removerQuebraDeLinha(char *str) {
+    size_t tamanho = strlen(str);
+    if (tamanho > 0 && str[tamanho - 1] == '\n') {
+        str[tamanho - 1] = '\0';
+    }
+}
+
+void limparBufferEntrada() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 void InserirPet(Fila * normal, Fila *emergencia ){
@@ -289,22 +297,31 @@ void InserirPet(Fila * normal, Fila *emergencia ){
     time_t segundos;
 
     novo.id = IdAleatorio(normal,emergencia);
-    printf("O id do pet �: %d", novo.id);
+    printf("<==========================>\n\n");
     printf("Digite o nome do Pet: \n");
-
+    printf("=> ");
+    limparBufferEntrada();
     fgets(novo.nome,50,stdin);
-    printf("Digite a esp�cie: \n");
+    removerQuebraDeLinha(novo.nome);
+    system("cls");
+
+    printf("<==========================>\n\n");
+    printf("Digite a espécie: \n");
+    printf("=> ");
     fgets(novo.especie,50,stdin);
+    removerQuebraDeLinha(novo.especie);
+    system("cls");
+
     novo.data_nasc = criarData();
 
     time(&segundos);
     data_local = localtime(&segundos);
-
     novo.idade = (data_local->tm_year + 1900) - novo.data_nasc.ano;
 
     do {
         printf("Digite a Prioridade: Normal(0) ou Emerg�ncia (1): \n");
         scanf("%i", &prioridade);
+        novo.prioridade = prioridade;
     } while((prioridade != 1) && (prioridade != 0));
 
     if(prioridade == 1){
@@ -316,6 +333,7 @@ void InserirPet(Fila * normal, Fila *emergencia ){
 }
 
 int main(){
+
     Fila *fila_normal = InicializarFila();
     Fila *fila_emergente = InicializarFila();
     Fila *fila_antendidos = InicializarFila();
@@ -466,7 +484,7 @@ int main(){
 
             case 5:
                 system("cls");
-                printf("Imprimir Próximo Atendimento\n");
+                ProximoAtender(fila_emergente, fila_normal);
                 system("pause");
                 system("cls");
                 break;
