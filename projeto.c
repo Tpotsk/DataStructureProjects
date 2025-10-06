@@ -27,24 +27,24 @@ void sequenciaDeChar(char prim, char meio, char ult, int largura){
 }
 
 void cabecalho(){
-    tabelaLinha(0xC9, 0xCD, 0xBB, 69);
-    printf("%c   "NEGRITO"Sistema de Registro Veterinario ~ Bem vindo(a)"RESET"                  %c", 0xBA, 0xBA);
-    tabelaLinha(0xC8, 0xCD, 0xBC, 69);
+    tabelaLinha(0xC9, 0xCD, 0xBB, 68);
+    printf("%c   "NEGRITO"Sistema de Registro Veterinario ~ Bem vindo(a)"RESET"                 %c", 0xBA, 0xBA);
+    tabelaLinha(0xC8, 0xCD, 0xBC, 68);
 }
 
 void MenuOpcoes(){
-    tabelaLinha(0xC9, 0xCD, 0xBB, 69);
-    printf("%c "NEGRITO"Servicos:"RESET"                                                         %c", 0xBA, 0xBA);
-    tabelaLinha(0xCC, 0xCD, 0xB9, 69);
-    printf("%c           "CIANO"( 1 )"RESET" Inserir pet na fila de atendimento                %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 2 )"RESET" Atender pet (remover da fila de atendimento)      %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 3 )"RESET" Buscar pet                                        %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 4 )"RESET" Imprimir fila de atendimento                      %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 5 )"RESET" Proximo atendimento                               %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 6 )"RESET" Pets ja atendidos                                 %c", 0xBA, 0xBA);
-    tabelaLinha(0xBA, ' ', 0xBA, 69);
-    printf("%c           "VERMELHO"( 7 )"RESET" Finalizar sistema                                 %c", 0xBA, 0xBA);
-    tabelaLinha(0xC8, 0xCD, 0xBC, 69);
+    tabelaLinha(0xC9, 0xCD, 0xBB, 68);
+    printf("%c "NEGRITO"Servicos:"RESET"                                                        %c", 0xBA, 0xBA);
+    tabelaLinha(0xCC, 0xCD, 0xB9, 68);
+    printf("%c           "CIANO"( 1 )"RESET" Inserir pet na fila de atendimento               %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 2 )"RESET" Atender pet (remover da fila de atendimento)     %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 3 )"RESET" Buscar pet                                       %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 4 )"RESET" Imprimir fila de atendimento                     %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 5 )"RESET" Proximo atendimento                              %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 6 )"RESET" Pets ja atendidos                                %c", 0xBA, 0xBA);
+    tabelaLinha(0xBA, ' ', 0xBA, 68);
+    printf("%c           "VERMELHO"( 7 )"RESET" Finalizar sistema                                %c", 0xBA, 0xBA);
+    tabelaLinha(0xC8, 0xCD, 0xBC, 68);
     printf("\nPressione o ID do servico desejado: ");
 }
 
@@ -341,6 +341,34 @@ int main(){
     int controle = 1;
     char input_servico;
 
+    //data dump
+    int min = 100, max=999;
+    int rnum;
+    srand(time(NULL));
+    Pet dump_pet;
+    rnum = 100;
+
+    for(int i = 0; i < 10; i++){
+        while(BuscarIDNaFila(fila_emergente, rnum) != NULL || BuscarIDNaFila(fila_normal, rnum) != NULL || BuscarIDNaFila(fila_antendidos, rnum) != NULL){
+            rnum = min + rand() % (max - min + 1);
+        }
+
+        dump_pet.id = rnum;
+        strcpy(dump_pet.nome, "Lorem Ipsum");
+        strcpy(dump_pet.especie, "Dolor Astmet");
+        dump_pet.data_nasc.dia = (rand() % 30) + 1;
+        dump_pet.data_nasc.mes = (rand() % 11) + 1;
+        dump_pet.data_nasc.ano = 2010 + rand() % 10;
+        dump_pet.idade = 2025 - dump_pet.data_nasc.ano;
+        dump_pet.prioridade = rand() % 2;
+
+        if(dump_pet.prioridade == 1){
+            InserirNaFila(fila_emergente, dump_pet);
+        } else {
+            InserirNaFila(fila_normal, dump_pet);
+        }
+    }
+
     while(controle){
         cabecalho();
         MenuOpcoes();
@@ -362,7 +390,10 @@ int main(){
 
             case 2:
                 system("cls");
+                cabecalho();
+                printf("\n");
                 AtenderPet(fila_emergente, fila_normal, fila_antendidos);
+                printf("\n");
                 system("pause");
                 system("cls");
                 break;
@@ -458,7 +489,10 @@ int main(){
 
             case 5:
                 system("cls");
+                cabecalho();
+                printf("\n");
                 ProximoAtender(fila_emergente, fila_normal);
+                printf("\n");
                 system("pause");
                 system("cls");
                 break;
