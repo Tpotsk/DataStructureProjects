@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <conio.h>
+//#include <conio.h>
 #include "FILA.h"
 
 #define NEGRITO "\033[1;37m"
@@ -12,7 +12,7 @@
 #define CIANO "\033[1;36m"
 #define RESET "\033[0m"
 
-// Funções visuais
+// Funï¿½ï¿½es visuais
 void tabelaLinha(char prim, char meio, char ult, int largura){
     printf("\n%c", prim);
     for(int i = 0; i < largura - 2; i++) printf("%c", meio);
@@ -122,8 +122,8 @@ void ExibirPet(Pet t){
     printf("\n");
 }
 
-// Funções lógicas
-// o retorno da função ser um ponteiro permite que haja o retorno NULL
+// Funï¿½ï¿½es lï¿½gicas
+// o retorno da funï¿½ï¿½o ser um ponteiro permite que haja o retorno NULL
 Pet *BuscarIDNaFila(Fila *f, int id){
     if(FilaVazia(f)) return NULL;
 
@@ -163,13 +163,13 @@ Fila *BuscarNomeNaFila(Fila *f, char *nome){
 void PrintAtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
 {
     if(!FilaVazia(Emergencia))
-    { // prioridade para emergência
+    { // prioridade para emergï¿½ncia
         Pet atendido_e = Emergencia->ini->info;
-        printf("\nAtendendo (EMERGÊNCIA):\n");
+        printf("\nAtendendo (EMERGï¿½NCIA):\n");
         ExibirPet(atendido_e);
     }
     else if(!FilaVazia(Normal))
-    {//normais logo em seguida, caso não tenham emergencias
+    {//normais logo em seguida, caso nï¿½o tenham emergencias
         Pet atendido_n = Normal->ini->info;
         printf("\nAtendendo (NORMAL):\n");
         ExibirPet(atendido_n);
@@ -184,20 +184,22 @@ void PrintAtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
 void AtenderPet(Fila *Emergencia, Fila *Normal, Fila *Atendidos)
 {
     if(!FilaVazia(Emergencia))
-    { // prioridade para emergência
+    { // prioridade para emergï¿½ncia
         Pet atendido_e = RemoverDaFila(Emergencia);
-        InserirNaFila(Atendidos, atendido_e); // salva no histórico
+        InserirNaFila(Atendidos, atendido_e); // salva no histï¿½rico
+        ExibirPet(atendido_e);
     }
     else if(!FilaVazia(Normal))
-    {//normais logo em seguida, caso não tenham emergencias
+    {//normais logo em seguida, caso nï¿½o tenham emergencias
         Pet atendido_n = RemoverDaFila(Normal);
-        InserirNaFila(Atendidos, atendido_n); // salva no histórico
+        InserirNaFila(Atendidos, atendido_n); // salva no histï¿½rico
+        ExibirPet(atendido_n);
     }
 }
 
 void ImprimirRelatorio(Fila *Emergencia, Fila *Normal)
 {
-    printf("\n--- FILA EMERGÊNCIA ---\n");
+    printf("\n--- FILA EMERGï¿½NCIA ---\n");
     ExibirFila(Emergencia);
 
     printf("\n--- FILA NORMAL ---\n");
@@ -239,22 +241,78 @@ int IdAleatorio(Fila *Emergencia, Fila *Normal)
     int existe;
 
     do {
-        gerado = min + rand() % (max - min + 1); // Gera um número aleatório dentro do intervalo
+        gerado = min + rand() % (max - min + 1); // Gera um nï¿½mero aleatï¿½rio dentro do intervalo
 
-        Pet *encontrado_E = BuscarIDNaFila(Emergencia, gerado); // Verifica se o ID já existe na fila de emergência
+        Pet *encontrado_E = BuscarIDNaFila(Emergencia, gerado); // Verifica se o ID jï¿½ existe na fila de emergï¿½ncia
 
-        Pet *encontrado_N = BuscarIDNaFila(Normal, gerado); // Verifica se o ID já existe na fila normal
+        Pet *encontrado_N = BuscarIDNaFila(Normal, gerado); // Verifica se o ID jï¿½ existe na fila normal
 
-        // Se não foi encontrado em nenhuma das filas
+        // Se nï¿½o foi encontrado em nenhuma das filas
         if (encontrado_E == NULL && encontrado_N == NULL) {
-            existe = 0; // ID é único, sai do loop
+            existe = 0; // ID ï¿½ ï¿½nico, sai do loop
         } else {
-            existe = 1; // ID já existe, volta para o loop
+            existe = 1; // ID jï¿½ existe, volta para o loop
         }
 
     } while (existe);
 
     return gerado;
+}
+
+Data criarData(){
+    int ano,mes,dia;
+    Data info;
+    do {
+        printf("Insira o Ano de Nascimento: ");
+        scanf("%i", &ano);
+    } while (ano < 0);
+
+    do {
+        printf("Insira o Mï¿½s de Nascimento: ");
+        scanf("%i", &mes);
+    } while (mes < 1 || mes > 12);
+
+    do {
+        printf("Insira o Dia de Nascimento: ");
+        scanf("%i", &dia);
+    } while (dia < 0 || dia > 30);
+    info.ano = ano;
+    info.mes = mes;
+    info.dia = dia;
+    return info;
+}
+
+void InserirPet(Fila * normal, Fila *emergencia ){
+    Pet novo;
+    int idade, prioridade;
+    struct tm *data_local;
+    time_t segundos;
+
+    novo.id = IdAleatorio(normal,emergencia);
+    printf("O id do pet ï¿½: %d", novo.id);
+    printf("Digite o nome do Pet: \n");
+
+    fgets(novo.nome,50,stdin);
+    printf("Digite a espï¿½cie: \n");
+    fgets(novo.especie,50,stdin);
+    novo.data_nasc = criarData();
+
+    time(&segundos);
+    data_local = localtime(&segundos);
+
+    novo.idade = (data_local->tm_year + 1900) - novo.data_nasc.ano;
+
+    do {
+        printf("Digite a Prioridade: Normal(0) ou Emergï¿½ncia (1): \n");
+        scanf("%i", &prioridade);
+    } while((prioridade != 1) && (prioridade != 0));
+
+    if(prioridade == 1){
+        InserirNaFila(emergencia, novo);
+    } else {
+        InserirNaFila(normal, novo);
+    }
+
 }
 
 int main(){
@@ -298,7 +356,7 @@ int main(){
         MenuOpcoes();
 
         do{
-            input_servico = getch();
+            input_servico = getchar();
             controle = input_servico - '0';
             printf("%d", controle);
         }while(controle < 1 || controle > 7);
@@ -306,14 +364,14 @@ int main(){
         switch(controle){
             case 1:
                 system("cls");
-                printf("serviço 1\n");
+                InserirPet(fila_normal, fila_emergente);
                 system("pause");
                 system("cls");
                 break;
 
             case 2:
                 system("cls");
-                printf("serviço 2\n");
+                AtenderPet(fila_emergente, fila_normal, fila_antendidos);
                 system("pause");
                 system("cls");
                 break;
@@ -328,7 +386,7 @@ int main(){
                 cabecalho();
 
                 printf("\nRealizar busca atraves do: \n\t"CIANO"( 1 )"NEGRITO" ID\n\t"CIANO"( 2 )"NEGRITO" NOME\n\n\t"VERMELHO"( OUTRO )"NEGRITO" CANCELAR"RESET"\n\n> ");
-                input_servico = getch();
+                input_servico = getchar();
                 controle = input_servico - '0';
 
                 system("cls");
@@ -340,7 +398,7 @@ int main(){
                     getchar();
 
                     while(id_busca < 100 || id_busca > 999){
-                        printf("\nID inserido inválido. Insira novamente: ");
+                        printf("\nID inserido invï¿½lido. Insira novamente: ");
                         scanf("%d", &id_busca);
                     }
 
@@ -408,7 +466,7 @@ int main(){
 
             case 5:
                 system("cls");
-                printf("serviço 5\n");
+                printf("Imprimir PrÃ³ximo Atendimento\n");
                 system("pause");
                 system("cls");
                 break;
