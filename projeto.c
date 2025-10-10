@@ -429,8 +429,8 @@ int main(){
                     system("pause");
 
                     if(l[0]!= NULL) l[0] = LiberarFila(l[0]);
-                    if(l[1]!= NULL) l[0] = LiberarFila(l[1]);
-                    if(l[2]!= NULL) l[0] = LiberarFila(l[2]);
+                    if(l[1]!= NULL) l[1] = LiberarFila(l[1]);
+                    if(l[2]!= NULL) l[2] = LiberarFila(l[2]);
                 }
                 system("cls");
                 break;
