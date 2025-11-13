@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
 
 #define NEGRITO "\033[1;37m"
 #define AZUL "\033[1;34m"
@@ -41,7 +43,77 @@ void MenuOpcoes(){
     printf("\nPressione o ID do servico desejado: ");
 }
 
+void CabecalhoVenda1(){
+    sequenciaDeChar(0xDA, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 12);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 9);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"MATRICULA"RESET" %c "NEGRITO"NOME COMPRADOR"RESET"                                     %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
 
+    sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 12);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC5, 0xC4, 0xB4, 9);
+}
+
+void ExibirVenda1() {               // usado pra exibir as vendas na listagem de vendas e buscar de vendas por valor
+    int id = 1234;
+    char vendedor[50] = {"teste"};
+    char matricula[5] = {"oi11"};
+    char comprador[50] = {"CompradorComprador Comprador"};
+    int dia = 12;
+    int mes = 12;
+    int ano = 2012;
+    double valor = 20.99;
+
+    printf("\n%c %4d %c %-50s %c %-9s %c %-50s %c %2d/%2d/%-5d %c %.2f %c\n", 0xB3, id, 0xB3, vendedor, 0xB3, matricula, 0xB3, comprador, 0xB3, dia, mes, ano, 0xB3, valor, 0xB3);
+}
+
+void FecharVenda1(){
+    sequenciaDeChar(0xC0, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 12);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC1, 0xC4, 0xD9, 9);
+    printf("\n\n");
+}
+
+void CabecalhoVenda2(){               // usado pra exibir as vendas na busca de vendas por vendedor
+    sequenciaDeChar(0xDA, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC2, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 9);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+
+    sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC5, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC5, 0xC4, 0xB4, 9);
+}
+
+void ExibirVenda2() {
+    int id = 1234;
+    char comprador[50] = {"CompradorComprador Comprador"};
+    int dia = 12;
+    int mes = 12;
+    int ano = 2012;
+    double valor = 20.99;
+
+    printf("\n%c %4d %c %-50s %c %2d/%2d/%-5d %c %.2f %c\n", 0xB3, id, 0xB3, comprador, 0xB3, dia, mes, ano, 0xB3, valor, 0xB3);
+}
+
+void FecharVenda2(){
+    sequenciaDeChar(0xC0, 0xC4, 0xC4, 7);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
+    sequenciaDeChar(0xC1, 0xC4, 0xC4, 14);
+    sequenciaDeChar(0xC1, 0xC4, 0xD9, 9);
+    printf("\n\n");
+}
 
 int main(){
     int controle = 1;
@@ -61,7 +133,9 @@ int main(){
             case 1:{
                 system("cls");
                 cabecalho();
-                printf("\nfuncionalidade -> inserir nova venda\n");
+                CabecalhoVenda1();
+                ExibirVenda1();
+                FecharVenda1();
                 system("pause");
                 system("cls");
                 break;
@@ -70,7 +144,9 @@ int main(){
             case 2: {
                 system("cls");
                 cabecalho();
-                printf("\nfuncionalidade -> listar vendas\n");
+                CabecalhoVenda2();
+                ExibirVenda2();
+                FecharVenda2();
                 system("pause");
                 system("cls");
                 break;
