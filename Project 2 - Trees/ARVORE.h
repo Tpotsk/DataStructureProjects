@@ -10,26 +10,34 @@ typedef struct data {
     int ano;
 } Data;
 
+typedef struct venda {
+    int id;
+    char cliente[50];
+    char vendedor[50];
+    char matricula[4];
+    Data dt_transacao;
+    float valor;
+} Venda;
+
 typedef struct Arvore_AVL
 {
-      int info;
+      Venda venda;
       struct Arvore_AVL *esq;
       struct Arvore_AVL *dir;
       int FB;
 }Avl;
 
-
-
-Avl * criaNo(int num)
+Avl * criaNo(Venda venda)
 {
     Avl *p=(Avl*)malloc(sizeof(Avl));
-    p->info=num;
+    p->venda=venda;
     p->dir=NULL;
     p->esq=NULL;
     p->FB=0;
     return p;
 
 }
+
 Avl * rotacionarEsq(Avl *a,int *status)
 {
     Avl *b,*c;
@@ -116,25 +124,25 @@ Avl * rotacionarDir(Avl *a,int *status)
     }
     a->FB=0;
     *status=1;
-    printf("\n FB de a =%d no= %d",a->FB,a->info);
-    printf("\n FB de b =%d no= %d",b->FB,b->info);
+    printf("\n FB de a =%d no= %d",a->FB,a->venda.valor);
+    printf("\n FB de b =%d no= %d",b->FB,b->venda.valor);
     fflush(stdin);
     getchar();
     return a;
 }
 
 
-void insere(Avl **no, int num, int *status)
+void insere(Avl **no, Venda Nvenda, int *status)
 {
     if((*no)==NULL)
     {
-        *no=criaNo(num);
+        *no=criaNo(Nvenda);
         *status=0;
 
     }
     else
     {
-        if((*no)->info==num)
+        if((*no)->venda.id==Nvenda.valor)
         {
             printf("\n\n==> Elemento REPETIDO - TECLE ENTER");
             fflush(stdin);
@@ -142,14 +150,14 @@ void insere(Avl **no, int num, int *status)
         }
         else
         {
-            if(num < (*no)->info)
+            if(Nvenda.valor < (*no)->venda.valor)
             {
                 printf("\n insere esquerda:\n\n");
-                insere(&(*no)->esq,num,status);
+                insere(&(*no)->esq,Nvenda,status);
                 printf("status = %d\n",*status);
                 if(*status==0)//true
                 {
-                    printf("%d FB = %d\n",(*no)->info,(*no)->FB);
+                    printf("%d FB = %d\n",(*no)->venda.valor,(*no)->FB);
                     switch((*no)->FB)
                     {
                         case 1:
@@ -158,7 +166,7 @@ void insere(Avl **no, int num, int *status)
                             *status=1;//false
                         break;
                         case 0:
-                            printf("%d mudou FB para -1\n",(*no)->info);
+                            printf("%d mudou FB para -1\n",(*no)->venda.valor);
                             (*no)->FB=-1;
                         break;
                         case -1:
@@ -170,11 +178,11 @@ void insere(Avl **no, int num, int *status)
             }
           else // num > no->info => direita
           {
-                insere(&(*no)->dir,num,status);
+                insere(&(*no)->dir,Nvenda,status);
                 printf("status = %d\n",*status);
                 if(*status==0)//true
                 {
-                    printf("%d FB = %d\n",(*no)->info,(*no)->FB);
+                    printf("%d FB = %d\n",(*no)->venda.valor,(*no)->FB);
                     switch((*no)->FB)
                     {
                         case-1:
@@ -183,7 +191,7 @@ void insere(Avl **no, int num, int *status)
                             *status=1;//false
                         break;
                         case 0:
-                            printf("%d mudou FB para 1\n",(*no)->info);
+                            printf("%d mudou FB para 1\n",(*no)->venda.valor);
                             (*no)->FB=1;
                         break;
                         case 1:
@@ -203,7 +211,7 @@ void imprimir_in_order(Avl *pai)
     {
         imprimir_in_order(pai->dir);
     }
-    printf(" %d", pai->info);
+    printf(" %0.2f", pai->venda.valor);
     if(pai->esq!=NULL)
     {
         imprimir_in_order(pai->esq);
