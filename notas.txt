@@ -1,7 +1,8 @@
 funcionalidades
     inserir nova venda
-    listar vendas -> ID, Cliente, Data de transação, Valor
-    listar vendas abaixo ou acima de valor definido -> ID, Vendedor, matrícula, Cliente, Data da transação, Valor
+    listar vendas -> ID | Vendedor | Matrícula |Cliente | Data de Transação| Valor(R$) 
+    listar vendas de um vendedor -> ID | Cliente | Data de Transação| Valor(R$) 
+    listar vendas abaixo ou acima de valor definido -> ID | Vendedor | Matrícula |Cliente | Data de Transação| Valor(R$)
     estatistícas -> numero total de vendas, faturamento total
     remover venda
     finalizar
@@ -22,4 +23,5 @@ funções em relação a árvore:
     remover
     buscar
     exibir
+
     limpar
