@@ -4,13 +4,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct data {
+typedef struct data
+{
     int dia;
     int mes;
     int ano;
 } Data;
 
-typedef struct venda {
+typedef struct venda
+{
     int id;
     char cliente[50];
     char vendedor[50];
@@ -19,200 +21,62 @@ typedef struct venda {
     float valor;
 } Venda;
 
-typedef struct Arvore_AVL
+typedef struct Arvore
 {
-      Venda venda;
-      struct Arvore_AVL *esq;
-      struct Arvore_AVL *dir;
-      int FB;
-}Avl;
+    Venda venda;
+    struct Arvore_AVL *esq;
+    struct Arvore_AVL *dir;
+} Arv;
 
-Avl * criaNo(Venda venda)
+Arv *criaNo(Venda venda)
 {
-    Avl *p=(Avl*)malloc(sizeof(Avl));
-    p->venda=venda;
-    p->dir=NULL;
-    p->esq=NULL;
-    p->FB=0;
+    Arv *p = (Arv *)malloc(sizeof(Arv));
+    p->venda = venda;
+    p->dir = NULL;
+    p->esq = NULL;
     return p;
-
 }
 
-Avl * rotacionarEsq(Avl *a,int *status)
+void insere(Arv* Pai, Venda Nvenda)
 {
-    Avl *b,*c;
-    b=a->dir;
-    if(b->FB==1)//rota��o simples
-    {
-        printf("\n\nROTA��O SIMPLES -ESQUERDA \n\n");
-        a->dir=b->esq;
-        b->esq=a;
-        a->FB=0;
-        a=b;
+    if(Pai == NULL){
+        Arv* novo = (Arv*)malloc(sizeof(Arv));
+        novo->dir = NULL;
+        novo->esq = NULL;
+        novo->venda = Nvenda;
+        Pai = novo;
     }
-    else //rota��o dupla
-    {
-        printf("\n\nROTA��O DUPLA -ESQUERDA \n\n");
-        c=b->esq;
-        b->esq=c->dir;
-        c->dir=b;
-        a->dir=c->esq;
-        c->esq=a;
-        if(c->FB==1)
-        {
-            a->FB=-1;
-        }
-        else
-        {
-            a->FB=0;
-        }
-        if(c->FB==-1)
-        {
-            b->FB=1;
-        }
-        else
-        {
-            b->FB=0;
-        }
-        a=c;
+    if(Nvenda.id > Pai->venda.id){
+        insere(Pai->dir,Nvenda);
     }
-    a->FB=0;
-    *status=1;
-    return a;
-}
-Avl * rotacionarDir(Avl *a,int *status)
-{
-    Avl *b,*c;
-    printf("\n Entrou Rota��o direita FB de a =%d",a->FB);
-    b=a->esq;
-    if(b->FB== -1)//rota��o simples
-    {
-        printf("\n\nROTA��O SIMPLES -DIREITA \n\n");
-        a->esq=b->dir;
-        b->dir=a;
-        a->FB=0;
-        a=b;
-    }
-    else //rota��o dupla
-    {
-        printf("\n\nROTA��O DUPLA -DIREITA \n\n");
-        printf("\n FB de a =%d",a->FB);
-        printf("\n FB de b =%d",b->FB);
-        c=b->dir;
-        printf("\n FB de c =%d",c->FB);
-        b->dir=c->esq;
-        c->esq=b;
-        a->esq=c->dir;
-        c->dir=a;
-        if(c->FB== -1)
-        {
-            a->FB= 1;
-        }
-        else
-        {
-            a->FB=0;
-        }
-        if(c->FB== 1)
-        {
-            b->FB=-1;
-        }
-        else
-        {
-            b->FB=0;
-        }
-        a=c;
-    }
-    a->FB=0;
-    *status=1;
-    printf("\n FB de a =%d no= %d",a->FB,a->venda.valor);
-    printf("\n FB de b =%d no= %d",b->FB,b->venda.valor);
-    fflush(stdin);
-    getchar();
-    return a;
-}
-
-
-void insere(Avl **no, Venda Nvenda, int *status)
-{
-    if((*no)==NULL)
-    {
-        *no=criaNo(Nvenda);
-        *status=0;
-
-    }
-    else
-    {
-        if((*no)->venda.id==Nvenda.valor)
-        {
-            printf("\n\n==> Elemento REPETIDO - TECLE ENTER");
-            fflush(stdin);
-            getchar();
-        }
-        else
-        {
-            if(Nvenda.valor < (*no)->venda.valor)
-            {
-                printf("\n insere esquerda:\n\n");
-                insere(&(*no)->esq,Nvenda,status);
-                printf("status = %d\n",*status);
-                if(*status==0)//true
-                {
-                    printf("%d FB = %d\n",(*no)->venda.valor,(*no)->FB);
-                    switch((*no)->FB)
-                    {
-                        case 1:
-                            (*no)->FB=0;
-                              printf("mudou status = %d\n\n",*status);
-                            *status=1;//false
-                        break;
-                        case 0:
-                            printf("%d mudou FB para -1\n",(*no)->venda.valor);
-                            (*no)->FB=-1;
-                        break;
-                        case -1:
-                            printf("\n\n rotacionar direita\n");
-                            (*no)=rotacionarDir((*no),status);
-                        break;
-                    }
-                }
-            }
-          else // num > no->info => direita
-          {
-                insere(&(*no)->dir,Nvenda,status);
-                printf("status = %d\n",*status);
-                if(*status==0)//true
-                {
-                    printf("%d FB = %d\n",(*no)->venda.valor,(*no)->FB);
-                    switch((*no)->FB)
-                    {
-                        case-1:
-                            (*no)->FB=0;
-                             printf("mudou status = %d\n\n",*status);
-                            *status=1;//false
-                        break;
-                        case 0:
-                            printf("%d mudou FB para 1\n",(*no)->venda.valor);
-                            (*no)->FB=1;
-                        break;
-                        case 1:
-                            printf("\n\nrotacionar esquerda\n");
-                            (*no)=rotacionarEsq((*no),status);
-                        break;
-                    }
-                }
-            }
-        }
+    if(Nvenda.id < Pai->venda.id){
+        insere(Pai->dir,Nvenda);
     }
 }
 
-void imprimir_in_order(Avl *pai)
+Arv * buscaID(Arv *Pai, int ID){
+    if(Pai == NULL){
+        return NULL;
+    }
+    if(ID > Pai->venda.id && Pai->dir != NULL){
+       return buscaID(Pai->dir, ID);
+    }
+    if(ID < Pai->venda.id && Pai->esq != NULL){
+       return buscaID(Pai->esq, ID);
+    }
+    if(ID == Pai->venda.id){
+        return Pai;
+    }
+}
+
+void imprimir_in_order(Arv *pai)
 {
-    if(pai->dir!=NULL)
+    if (pai->dir != NULL)
     {
         imprimir_in_order(pai->dir);
     }
     printf(" %0.2f", pai->venda.valor);
-    if(pai->esq!=NULL)
+    if (pai->esq != NULL)
     {
         imprimir_in_order(pai->esq);
     }
