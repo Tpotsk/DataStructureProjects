@@ -24,8 +24,8 @@ typedef struct venda
 typedef struct Arvore
 {
     Venda venda;
-    struct Arvore_AVL *esq;
-    struct Arvore_AVL *dir;
+    struct Arvore *esq;
+    struct Arvore *dir;
 } Arv;
 
 Arv *criaNo(Venda venda)
@@ -37,21 +37,82 @@ Arv *criaNo(Venda venda)
     return p;
 }
 
-void insere(Arv* Pai, Venda Nvenda)
+void insere(Arv *Pai, Venda Nvenda)
 {
+    if (Pai == NULL)
+    {
+        Pai = (Arv*)malloc(sizeof(Arv));
+        Pai->dir = NULL;
+        Pai->esq = NULL;
+        Pai->venda = Nvenda;
+    }
+    else if (Nvenda.id > Pai->venda.id)
+    {
+        if (Pai->dir == NULL)
+        {
+            Pai->dir = (Arv*)malloc(sizeof(Arv));
+            Pai->dir->dir = NULL;
+            Pai->dir->esq = NULL;
+            Pai->dir->venda = Nvenda;
+        }
+        else
+        {
+            insere(Pai->dir, Nvenda);
+        }
+    }
+    else if (Nvenda.id < Pai->venda.id)
+    {
+        if (Pai->esq == NULL)
+        {
+            Pai->esq = (Arv*)malloc(sizeof(Arv));
+            Pai->esq->dir = NULL;
+            Pai->esq->esq = NULL;
+            Pai->esq->venda = Nvenda;
+        }
+        else
+        {
+            insere(Pai->esq, Nvenda);
+        }
+    }
+    else
+    {
+        printf("Erro: ID %d ja  existe na  arvore\n", Nvenda.id);
+    }
+}
+
+Arv* removeVenda(Arv* Pai, int ID){
     if(Pai == NULL){
-        Arv* novo = (Arv*)malloc(sizeof(Arv));
-        novo->dir = NULL;
-        novo->esq = NULL;
-        novo->venda = Nvenda;
-        Pai = novo;
+        return NULL;
     }
-    if(Nvenda.id > Pai->venda.id){
-        insere(Pai->dir,Nvenda);
+    if(ID > Pai->venda.id && Pai->dir != NULL){
+        Pai->dir = removeVenda(Pai->dir, ID);
     }
-    if(Nvenda.id < Pai->venda.id){
-        insere(Pai->dir,Nvenda);
+    if(ID < Pai->venda.id && Pai->esq != NULL){
+        Pai->esq = removeVenda(Pai->esq, ID);
     }
+    if(ID == Pai->venda.id){
+        if(Pai->dir == NULL && Pai->esq == NULL){
+            free(Pai);
+            return NULL;
+        }
+        if(Pai->dir == NULL){
+            Arv* aux = Pai->esq;
+            free(Pai);
+            return aux;
+        }
+        if(Pai->esq == NULL){
+            Arv* aux = Pai->dir;
+            free(Pai);
+            return aux;
+        }
+        Arv* aux = Pai->dir;
+        while(aux->esq != NULL){
+            aux = aux->esq;
+        }
+        Pai->venda = aux->venda;
+        Pai->dir = removeVenda(Pai->dir, aux->venda.id);
+    }
+    return Pai;
 }
 
 Arv * buscaID(Arv *Pai, int ID){

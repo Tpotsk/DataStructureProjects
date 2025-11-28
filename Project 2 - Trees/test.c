@@ -8,5 +8,6 @@ int main(){
     novo2.valor = 1299;
     Arv* raiz = criaNo(novo);
     insere(raiz,novo2);
+    removeVenda(raiz, 192);
     imprimir_in_order(raiz);
 }
