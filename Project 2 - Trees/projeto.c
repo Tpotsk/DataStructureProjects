@@ -116,6 +116,46 @@ void FecharVenda2(){
     printf("\n\n");
 }
 
+void ExibirEstatisticas(int quantidade, float faturamento) {
+    float valorMedio = (quantidade > 0) ? faturamento / quantidade : 0.0f ;
+
+    sequenciaDeChar(0xDA, 0xC4, 0xC2, 24);
+    sequenciaDeChar(0xC4, 0xC4, 0xBF, 15);
+    printf("\n%c      FATURAMENTO     %c R$ %-9.2f %c\n", 0xB3, 0xB3,faturamento, 0xB3);
+    sequenciaDeChar(0xC3, 0xC4, 0xC5, 24);
+    sequenciaDeChar(0xC4, 0xC4, 0xB4, 15);
+    printf("\n%c QUANTIDADE DE VENDAS %c %-8d un. %c\n", 0xB3, 0xB3, quantidade, 0xB3);
+    sequenciaDeChar(0xC3, 0xC4, 0xC5, 24);
+    sequenciaDeChar(0xC4, 0xC4, 0xB4, 15);
+    printf("\n%c VALOR MEDIO DE VENDA %c R$ %-9.2f %c\n", 0xB3, 0xB3, valorMedio, 0xB3);
+    sequenciaDeChar(0xC0, 0xC4, 0xC1, 24);
+    sequenciaDeChar(0xC4, 0xC4, 0xD9, 15);
+    printf("\n\n");
+}
+
+// Funções lógicas
+float CalcularFaturamento(Arv *r) {
+    if(r == NULL) return 0.0f;
+
+    float faturamento = r->venda.valor;
+
+    faturamento += CalcularFaturamento(r->dir);
+    faturamento += CalcularFaturamento(r->esq);
+
+    return faturamento;
+}
+
+int QuantidadeDeVendas(Arv *r) {
+    if(r == NULL) return 0;
+
+    int quantidade = 1;
+
+    quantidade += QuantidadeDeVendas(r->dir);
+    quantidade += QuantidadeDeVendas(r->esq);
+
+    return quantidade;
+}
+
 int main(){
     system("cls");
     int controle = 1;
@@ -166,7 +206,8 @@ int main(){
             case 4: {
                 system("cls");
                 cabecalho();
-                printf("\nfuncionalidade -> num total de vendas, faturamento total\n");
+                printf("\n");
+                ExibirEstatisticas(0, 0.0f);
                 system("pause");
                 system("cls");
                 break;
