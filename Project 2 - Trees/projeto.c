@@ -161,6 +161,8 @@ int main(){
     int controle = 1;
     char input_servico;
 
+    Arv *vendas = NULL;
+
     while(controle){
         cabecalho();
         MenuOpcoes();
@@ -207,7 +209,11 @@ int main(){
                 system("cls");
                 cabecalho();
                 printf("\n");
-                ExibirEstatisticas(0, 0.0f);
+
+                int quantidade = QuantidadeDeVendas(vendas);
+                float faturamento = CalcularFaturamento(vendas);
+
+                ExibirEstatisticas(quantidade, faturamento);
                 system("pause");
                 system("cls");
                 break;
