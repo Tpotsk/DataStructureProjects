@@ -50,28 +50,19 @@ void CabecalhoVenda1(){
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 12);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC2, 0xC4, 0xBF, 9);
-    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"MATRICULA"RESET" %c "NEGRITO"NOME COMPRADOR"RESET"                                     %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 13);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"MATRICULA"RESET" %c "NEGRITO"NOME COMPRADOR"RESET"                                     %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR"RESET"     %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+}
 
+void ExibirVenda1(Venda venda) {               // usado pra exibir as vendas na listagem de vendas e buscar de vendas por valor
     sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 12);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC5, 0xC4, 0xB4, 9);
-}
+    sequenciaDeChar(0xC5, 0xC4, 0xB4, 13);
+    printf("\n%c %4d %c %-50s %c %-10s %c %-50s %c %2d/%2d/%-5d %c %-9.2f %c\n", 0xB3, venda.id, 0xB3, venda.vendedor, 0xB3, venda.matricula, 0xB3, venda.cliente, 0xB3, venda.dt_transacao.dia, venda.dt_transacao.mes, venda.dt_transacao.ano, 0xB3, venda.valor, 0xB3);
 
-void ExibirVenda1() {               // usado pra exibir as vendas na listagem de vendas e buscar de vendas por valor
-    int id = 1234;
-    char vendedor[50] = {"teste"};
-    char matricula[5] = {"oi11"};
-    char comprador[50] = {"CompradorComprador Comprador"};
-    int dia = 12;
-    int mes = 12;
-    int ano = 2012;
-    double valor = 20.99;
-
-    printf("\n%c %4d %c %-50s %c %-9s %c %-50s %c %2d/%2d/%-5d %c %.2f %c\n", 0xB3, id, 0xB3, vendedor, 0xB3, matricula, 0xB3, comprador, 0xB3, dia, mes, ano, 0xB3, valor, 0xB3);
 }
 
 void FecharVenda1(){
@@ -80,7 +71,7 @@ void FecharVenda1(){
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 12);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC1, 0xC4, 0xD9, 9);
+    sequenciaDeChar(0xC1, 0xC4, 0xD9, 13);
     printf("\n\n");
 }
 
@@ -134,6 +125,33 @@ void ExibirEstatisticas(int quantidade, float faturamento) {
 }
 
 // Funções lógicas
+void ExibirVendas(Arv *r) {
+    if(r != NULL) {
+        ExibirVenda1(r->venda);
+
+        ExibirVendas(r->dir);
+        ExibirVendas(r->esq);
+    }
+}
+
+void ExibirVendasAbaixoDe(Arv *r, float v) {
+    if(r != NULL) {
+        if(r->venda.valor < v) ExibirVenda1(r->venda);
+
+        ExibirVendasAbaixoDe(r->dir, v);
+        ExibirVendasAbaixoDe(r->esq, v);
+    }
+}
+
+void ExibirVendasAcimaDe(Arv *r, float v) {
+    if(r != NULL) {
+        if(r->venda.valor >= v) ExibirVenda1(r->venda);
+
+        ExibirVendasAcimaDe(r->dir, v);
+        ExibirVendasAcimaDe(r->esq, v);
+    }
+}
+
 float CalcularFaturamento(Arv *r) {
     if(r == NULL) return 0.0f;
 
@@ -163,6 +181,37 @@ int main(){
 
     Arv *vendas = NULL;
 
+
+     // ==================================================
+    // TRECHO ISOLADO PARA POPULAR A ÁRVORE COM DADOS DE TESTE
+    // ==================================================
+    {
+        Venda vendasTeste[] = {
+            {1001, "João Silva", "Maria Santos", "V001", {15, 5, 2024}, 150.75},
+            {1002, "Ana Oliveira", "Carlos Lima", "V002", {16, 5, 2024}, 89.90},
+            {1003, "Pedro Costa", "Maria Santos", "V001", {17, 5, 2024}, 220.50},
+            {1004, "Mariana Souza", "Paulo Rocha", "V003", {18, 5, 2024}, 75.25},
+            {1005, "Lucas Pereira", "Carlos Lima", "V002", {19, 5, 2024}, 310.00},
+            {1006, "Julia Fernandes", "Ana Beatriz", "V004", {20, 5, 2024}, 125.80},
+            {1007, "Ricardo Alves", "Paulo Rocha", "V003", {21, 5, 2024}, 95.60},
+            {1008, "Fernanda Lima", "Maria Santos", "V001", {22, 5, 2024}, 180.30}
+        };
+
+        int numVendasTeste = sizeof(vendasTeste) / sizeof(vendasTeste[0]);
+
+        for(int i = 0; i < numVendasTeste; i++) {
+            if(vendas == NULL) {
+                vendas = criaNo(vendasTeste[i]);
+            } else {
+                insere(vendas, vendasTeste[i]);
+            }
+        }
+    }
+    // ==================================================
+    // FIM DO TRECHO DE POPULAÇÃO
+    // ==================================================
+
+
     while(controle){
         cabecalho();
         MenuOpcoes();
@@ -177,9 +226,7 @@ int main(){
             case 1:{
                 system("cls");
                 cabecalho();
-                CabecalhoVenda1();
-                ExibirVenda1();
-                FecharVenda1();
+                printf("\nfuncionalidade -> inserir vendas\n");
                 system("pause");
                 system("cls");
                 break;
@@ -188,9 +235,9 @@ int main(){
             case 2: {
                 system("cls");
                 cabecalho();
-                CabecalhoVenda2();
-                ExibirVenda2();
-                FecharVenda2();
+                CabecalhoVenda1();
+                ExibirVendas(vendas);
+                FecharVenda1();
                 system("pause");
                 system("cls");
                 break;
@@ -199,7 +246,33 @@ int main(){
             case 3: {
                 system("cls");
                 cabecalho();
-                printf("\nfuncionalidade -> listar vendas com filtro\n");
+
+                printf("\nBuscar Vendas que >");
+                printf("\n\tMenor que "CIANO"(PRESSIONE 1)"RESET);
+                printf("\n\tMaior que "CIANO"(PRESSIONE 2)\n\n"RESET);
+
+                int opcao = 0;
+                float valor = 0.0f;
+
+                do{
+                    printf(">");
+                    scanf("%d", &opcao);
+                } while(opcao != 1 && opcao != 2);
+
+                printf("\nInsira o valor a ser tomado como parametro >");
+                scanf("%f", &valor);
+
+                system("cls");
+                cabecalho();
+                CabecalhoVenda1();
+
+                if(opcao == 1) {
+                    ExibirVendasAbaixoDe(vendas, valor);
+                } else if(opcao == 2) {
+                    ExibirVendasAcimaDe(vendas, valor);
+                }
+
+                FecharVenda1();
                 system("pause");
                 system("cls");
                 break;
