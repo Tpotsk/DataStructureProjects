@@ -14,9 +14,9 @@ typedef struct data
 typedef struct venda
 {
     int id;
-    char cliente[50];
-    char vendedor[50];
-    char matricula[4];
+    char cliente[51];
+    char vendedor[51];
+    char matricula[5];
     Data dt_transacao;
     float valor;
 } Venda;

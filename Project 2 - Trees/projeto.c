@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "ARVORE.h"
 
 #define NEGRITO "\033[1;37m"
@@ -25,7 +26,7 @@ void sequenciaDeChar(char prim, char meio, char ult, int largura){
 
 void cabecalho(){
     tabelaLinha(0xC9, 0xCD, 0xBB, 68);
-    printf("%c   "NEGRITO"Sistema de Registro Veterinario ~ Bem vindo(a)"RESET"                 %c", 0xBA, 0xBA);
+    printf("%c   "NEGRITO"Sistema de Registro de Vendas ~ Bem vindo(a)"RESET"                   %c", 0xBA, 0xBA);
     tabelaLinha(0xC8, 0xCD, 0xBC, 68);
 }
 
@@ -35,11 +36,12 @@ void MenuOpcoes(){
     tabelaLinha(0xCC, 0xCD, 0xB9, 68);
     printf("%c           "CIANO"( 1 )"RESET" Inserir venda                                    %c\n", 0xBA, 0xBA);
     printf("%c           "CIANO"( 2 )"RESET" Listar vendas                                    %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 3 )"RESET" Buscar vendas                                    %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 4 )"RESET" Estatisticas                                     %c\n", 0xBA, 0xBA);
-    printf("%c           "CIANO"( 5 )"RESET" Remover venda                                    %c", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 3 )"RESET" Buscar vendas por vendedor                       %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 4 )"RESET" Buscar vendas por valor                          %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 5 )"RESET" Estatisticas                                     %c\n", 0xBA, 0xBA);
+    printf("%c           "CIANO"( 6 )"RESET" Remover venda                                    %c", 0xBA, 0xBA);
     tabelaLinha(0xBA, ' ', 0xBA, 68);
-    printf("%c           "VERMELHO"( 6 )"RESET" Finalizar sistema                                %c", 0xBA, 0xBA);
+    printf("%c           "VERMELHO"( 7 )"RESET" Finalizar sistema                                %c", 0xBA, 0xBA);
     tabelaLinha(0xC8, 0xCD, 0xBC, 68);
     printf("\nPressione o ID do servico desejado: ");
 }
@@ -50,8 +52,8 @@ void CabecalhoVenda1(){
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 12);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC2, 0xC4, 0xBF, 13);
-    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"MATRICULA"RESET" %c "NEGRITO"NOME COMPRADOR"RESET"                                     %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR"RESET"     %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 14);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"MATRICULA"RESET" %c "NEGRITO"NOME COMPRADOR"RESET"                                     %c "NEGRITO"DATA"RESET"        %c "NEGRITO"VALOR (R$)"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
 }
 
 void ExibirVenda1(Venda venda) {               // usado pra exibir as vendas na listagem de vendas e buscar de vendas por valor
@@ -60,9 +62,8 @@ void ExibirVenda1(Venda venda) {               // usado pra exibir as vendas na 
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 12);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC5, 0xC4, 0xB4, 13);
-    printf("\n%c %4d %c %-50s %c %-10s %c %-50s %c %2d/%2d/%-5d %c %-9.2f %c\n", 0xB3, venda.id, 0xB3, venda.vendedor, 0xB3, venda.matricula, 0xB3, venda.cliente, 0xB3, venda.dt_transacao.dia, venda.dt_transacao.mes, venda.dt_transacao.ano, 0xB3, venda.valor, 0xB3);
-
+    sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
+    printf("\n%c %4d %c %-50s %c %-10s %c %-50s %c %2d/%2d/%-5d %c %-10.2f %c\n", 0xB3, venda.id, 0xB3, venda.vendedor, 0xB3, venda.matricula, 0xB3, venda.cliente, 0xB3, venda.dt_transacao.dia, venda.dt_transacao.mes, venda.dt_transacao.ano, 0xB3, venda.valor, 0xB3);
 }
 
 void FecharVenda1(){
@@ -71,7 +72,7 @@ void FecharVenda1(){
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 12);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC1, 0xC4, 0xD9, 13);
+    sequenciaDeChar(0xC1, 0xC4, 0xD9, 14);
     printf("\n\n");
 }
 
@@ -79,31 +80,23 @@ void CabecalhoVenda2(){               // usado pra exibir as vendas na busca de 
     sequenciaDeChar(0xDA, 0xC4, 0xC4, 7);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC2, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC2, 0xC4, 0xBF, 9);
-    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME VENDEDOR"RESET"                                      %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+    sequenciaDeChar(0xC2, 0xC4, 0xBF, 14);
+    printf("\n%c "NEGRITO"ID"RESET"   %c "NEGRITO"NOME CLIENTE"RESET"                                       %c "NEGRITO"DATA TRANS."RESET" %c "NEGRITO"VALOR (R$)"RESET" %c\n", 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3, 0xB3);
+}
 
+void ExibirVenda2(Venda v) {
     sequenciaDeChar(0xC3, 0xC4, 0xC4, 7);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC5, 0xC4, 0xB4, 9);
-}
-
-void ExibirVenda2() {
-    int id = 1234;
-    char comprador[50] = {"CompradorComprador Comprador"};
-    int dia = 12;
-    int mes = 12;
-    int ano = 2012;
-    double valor = 20.99;
-
-    printf("\n%c %4d %c %-50s %c %2d/%2d/%-5d %c %.2f %c\n", 0xB3, id, 0xB3, comprador, 0xB3, dia, mes, ano, 0xB3, valor, 0xB3);
+    sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
+    printf("\n%c %4d %c %-50s %c %2d/%2d/%-5d %c %-10.2f %c\n", 0xB3, v.id, 0xB3, v.cliente, 0xB3, v.dt_transacao.dia, v.dt_transacao.mes, v.dt_transacao.ano, 0xB3, v.valor, 0xB3);
 }
 
 void FecharVenda2(){
     sequenciaDeChar(0xC0, 0xC4, 0xC4, 7);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC1, 0xC4, 0xC4, 14);
-    sequenciaDeChar(0xC1, 0xC4, 0xD9, 9);
+    sequenciaDeChar(0xC1, 0xC4, 0xD9, 14);
     printf("\n\n");
 }
 
@@ -125,12 +118,80 @@ void ExibirEstatisticas(int quantidade, float faturamento) {
 }
 
 // Funções lógicas
-void ExibirVendas(Arv *r) {
-    if(r != NULL) {
-        ExibirVenda1(r->venda);
+void EntradaDeString(char *str) {
+    int flag = 0;
 
-        ExibirVendas(r->dir);
-        ExibirVendas(r->esq);
+    while(!flag) {
+        printf("> ");
+        fflush(stdin);
+        fgets(str, 50, stdin);
+
+        int tam = 0;
+
+        while(str[tam] != '\0') {
+            if(str[tam] == '\n') {
+                str[tam] = '\0';
+            } else {
+                tam++;
+            }
+        }
+
+        flag = 1;
+    }
+}
+
+char *BuscarNomePorMatricula(Arv *r, char *matricula) {
+    if(r == NULL) {
+        return NULL;
+    }
+
+    if(strcmp(matricula, r->venda.matricula) == 0){
+        return r->venda.vendedor;
+    }
+
+    char *resultadoDir = BuscarNomePorMatricula(r->dir, matricula);
+    if(resultadoDir != NULL) return resultadoDir;
+
+    return BuscarNomePorMatricula(r->esq, matricula);
+}
+
+char *BuscarMatriculaPorNome(Arv *r, char *nome) {
+    if(r == NULL) {
+        return NULL;
+    }
+
+    if(strcmp(nome, r->venda.vendedor) == 0){
+        return r->venda.matricula;
+    }
+
+    char *resultadoDir = BuscarMatriculaPorNome(r->dir, nome);
+    if(resultadoDir != NULL) return resultadoDir;
+
+    return BuscarMatriculaPorNome(r->esq, nome);
+}
+
+void ExibirVendasPorMatricula(Arv *r, char *matricula) {
+    if(r != NULL) {
+        if(strcmp(r->venda.matricula, matricula) == 0) ExibirVenda2(r->venda);
+
+        ExibirVendasPorMatricula(r->dir, matricula);
+        ExibirVendasPorMatricula(r->esq, matricula);
+    }
+}
+
+void ExibirVendasCrescente(Arv *r) {
+    if(r != NULL) {
+        ExibirVendasCrescente(r->esq);
+        ExibirVenda1(r->venda);
+        ExibirVendasCrescente(r->dir);
+    }
+}
+
+void ExibirVendasDecrescente(Arv *r) {
+    if(r != NULL) {
+        ExibirVendasDecrescente(r->dir);
+        ExibirVenda1(r->venda);
+        ExibirVendasDecrescente(r->esq);
     }
 }
 
@@ -186,16 +247,16 @@ int main(){
     // TRECHO ISOLADO PARA POPULAR A ÁRVORE COM DADOS DE TESTE
     // ==================================================
     {
-        Venda vendasTeste[] = {
-            {1001, "João Silva", "Maria Santos", "V001", {15, 5, 2024}, 150.75},
-            {1002, "Ana Oliveira", "Carlos Lima", "V002", {16, 5, 2024}, 89.90},
-            {1003, "Pedro Costa", "Maria Santos", "V001", {17, 5, 2024}, 220.50},
-            {1004, "Mariana Souza", "Paulo Rocha", "V003", {18, 5, 2024}, 75.25},
-            {1005, "Lucas Pereira", "Carlos Lima", "V002", {19, 5, 2024}, 310.00},
-            {1006, "Julia Fernandes", "Ana Beatriz", "V004", {20, 5, 2024}, 125.80},
-            {1007, "Ricardo Alves", "Paulo Rocha", "V003", {21, 5, 2024}, 95.60},
-            {1008, "Fernanda Lima", "Maria Santos", "V001", {22, 5, 2024}, 180.30}
-        };
+Venda vendasTeste[] = {
+    {1001, "Comprador 1", "Vendedor 1", "V001", {15, 5, 2024}, 150.75},
+    {1002, "Comprador 2", "Vendedor 2", "V002", {16, 5, 2024}, 89.90},
+    {1003, "Comprador 3", "Vendedor 1", "V001", {17, 5, 2024}, 220.50},
+    {1004, "Comprador 4", "Vendedor 3", "V003", {18, 5, 2024}, 75.25},
+    {1005, "Comprador 5", "Vendedor 2", "V002", {19, 5, 2024}, 310.00},
+    {1006, "Comprador 6", "Vendedor 4", "V004", {20, 5, 2024}, 125.80},
+    {1007, "Comprador 7", "Vendedor 3", "V003", {21, 5, 2024}, 95.60},
+    {1008, "Comprador 8", "Vendedor 1", "V001", {22, 5, 2024}, 180.30}
+};
 
         int numVendasTeste = sizeof(vendasTeste) / sizeof(vendasTeste[0]);
 
@@ -222,28 +283,116 @@ int main(){
             printf("%d", controle);
         }while(controle < 1 || controle > 7);
 
-        switch(controle){
-            case 1:{
+        switch(controle) {
+            case 1: {                                       // INSERIR NOVA VENDA
                 system("cls");
                 cabecalho();
                 printf("\nfuncionalidade -> inserir vendas\n");
                 system("pause");
                 system("cls");
+
                 break;
             }
 
-            case 2: {
+            case 2: {                                       // LISTAR TODAS AS VENDAS
                 system("cls");
                 cabecalho();
+
+                printf("\nListar vendas de maneira >");
+                printf("\n\tCrescente   "CIANO"(PRESSIONE 1)"RESET);
+                printf("\n\tDecrescente "CIANO"(PRESSIONE 2)\n\n"RESET);
+
+                int opcao = 0;
+
+                do{
+                    printf(">");
+                    scanf("%d", &opcao);
+                } while(opcao != 1 && opcao != 2);
+
+                printf("\n");
+
                 CabecalhoVenda1();
-                ExibirVendas(vendas);
+
+                if(opcao == 1) {
+                    ExibirVendasCrescente(vendas);
+                } else {
+                    ExibirVendasDecrescente(vendas);
+                }
+
                 FecharVenda1();
                 system("pause");
                 system("cls");
+
                 break;
             }
 
-            case 3: {
+            case 3: {                                       // BUSCAR VENDA POR VENDEDOR
+                system("cls");
+                cabecalho();
+
+                printf("\nRealizar busca atraves de >");
+                printf("\n\tNome do vendedor      "CIANO"(PRESSIONE 1)"RESET);
+                printf("\n\tMatricula do vendedor "CIANO"(PRESSIONE 2)\n\n"RESET);
+                printf("\n\tCancelar              "VERMELHO"(PRESSIONE OUTRO)\n\n"RESET);
+
+                int opcao = 0;
+                char buscarPor[51];
+                char *resultadoBusca;
+
+                do{
+                    printf(">");
+                    scanf("%d", &opcao);
+                } while(opcao != 1 && opcao != 2);
+
+                 getchar();
+
+                if(opcao == 1) {
+                    printf("\nInsira o nome do vendedor\n");
+                    EntradaDeString(buscarPor);
+
+                    system("cls");
+                    cabecalho();
+
+                    resultadoBusca = BuscarMatriculaPorNome(vendas, buscarPor);
+
+                    if(resultadoBusca != NULL) {
+                        printf("\nVendedor : %s", buscarPor);
+                        printf("\nMatricula: %s\n\n", resultadoBusca);
+
+                        CabecalhoVenda2();
+                        ExibirVendasPorMatricula(vendas, resultadoBusca);
+                        FecharVenda2();
+                    } else {
+                        printf("\nNao ha vendedor com esse nome nos registros.\n\n");
+                    }
+                } else if(opcao == 2) {
+                    printf("\nInsira a matricula do vendedor\n");
+                    EntradaDeString(buscarPor);
+
+                    system("cls");
+                    cabecalho();
+
+                    resultadoBusca = BuscarNomePorMatricula(vendas, buscarPor);
+
+                    if(resultadoBusca != NULL) {
+                        printf("\nVendedor : %s", resultadoBusca);
+                        printf("\nMatricula: %s\n\n", buscarPor);
+
+                        CabecalhoVenda2();
+                        ExibirVendasPorMatricula(vendas, buscarPor);
+                        FecharVenda2();
+                    } else {
+                        printf("\nNao ha vendedor com essa matricula nos registros.\n\n");
+                    }
+                }
+
+                system("pause");
+                system("cls");
+
+                break;
+            }
+
+            case 4: {                                       // LISTAR VENDAS ACIMA OU ABAIXO DE UM VALOR
                 system("cls");
                 cabecalho();
 
@@ -275,10 +424,11 @@ int main(){
                 FecharVenda1();
                 system("pause");
                 system("cls");
+
                 break;
             }
 
-            case 4: {
+            case 5: {                                       // EXIBIR ESTATISTICAS
                 system("cls");
                 cabecalho();
                 printf("\n");
@@ -289,22 +439,27 @@ int main(){
                 ExibirEstatisticas(quantidade, faturamento);
                 system("pause");
                 system("cls");
+
                 break;
             }
 
-            case 5: {
+            case 6: {                                       // REMOVER VENDA
                 system("cls");
                 cabecalho();
                 printf("\nfuncionalidade -> remover vendas\n");
                 system("pause");
                 system("cls");
                 break;
-            }
 
-            case 6: {
-                controle = 0;
                 break;
             }
+
+            case 7: {                                       // FINALIZAR
+                controle = 0;
+
+                break;
+            }
+
         }
     }
 }
