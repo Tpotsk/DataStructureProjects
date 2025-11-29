@@ -28,118 +28,79 @@ typedef struct Arvore
     struct Arvore *dir;
 } Arv;
 
-Arv *criaNo(Venda venda)
-{
-    Arv *p = (Arv *)malloc(sizeof(Arv));
-    p->venda = venda;
-    p->dir = NULL;
-    p->esq = NULL;
-    return p;
-}
-
-void insere(Arv *Pai, Venda Nvenda)
+Arv* insere(Arv *Pai, Venda Nvenda)
 {
     if (Pai == NULL)
     {
         Pai = (Arv*)malloc(sizeof(Arv));
-        Pai->dir = NULL;
-        Pai->esq = NULL;
         Pai->venda = Nvenda;
+        Pai->esq = NULL;
+        Pai->dir = NULL;
+        return Pai; // Retorna o novo endereço
     }
-    else if (Nvenda.id > Pai->venda.id)
+
+    if (Nvenda.id > Pai->venda.id)
     {
-        if (Pai->dir == NULL)
-        {
-            Pai->dir = (Arv*)malloc(sizeof(Arv));
-            Pai->dir->dir = NULL;
-            Pai->dir->esq = NULL;
-            Pai->dir->venda = Nvenda;
-        }
-        else
-        {
-            insere(Pai->dir, Nvenda);
-        }
+        Pai->dir = insere(Pai->dir, Nvenda);
     }
     else if (Nvenda.id < Pai->venda.id)
     {
-        if (Pai->esq == NULL)
-        {
-            Pai->esq = (Arv*)malloc(sizeof(Arv));
-            Pai->esq->dir = NULL;
-            Pai->esq->esq = NULL;
-            Pai->esq->venda = Nvenda;
-        }
-        else
-        {
-            insere(Pai->esq, Nvenda);
-        }
+        Pai->esq = insere(Pai->esq, Nvenda);
     }
     else
     {
-        printf("Erro: ID %d ja  existe na  arvore\n", Nvenda.id);
+        printf("Erro: ID %d ja existe na arvore\n", Nvenda.id);
     }
+
+    return Pai;
 }
 
-Arv* removeVenda(Arv* Pai, int ID){
-    if(Pai == NULL){
+Arv* removeVenda(Arv* Pai, int ID) {
+    if (Pai == NULL) {
         return NULL;
     }
-    if(ID > Pai->venda.id && Pai->dir != NULL){
+
+    if (ID > Pai->venda.id) {
         Pai->dir = removeVenda(Pai->dir, ID);
     }
-    if(ID < Pai->venda.id && Pai->esq != NULL){
+    else if (ID < Pai->venda.id) {
         Pai->esq = removeVenda(Pai->esq, ID);
     }
-    if(ID == Pai->venda.id){
-        if(Pai->dir == NULL && Pai->esq == NULL){
-            free(Pai);
-            return NULL;
-        }
-        if(Pai->dir == NULL){
+    else {
+        
+        // Caso 1: Nó sem filhos (folha) ou apenas 1 filho
+        if (Pai->dir == NULL) {
             Arv* aux = Pai->esq;
             free(Pai);
             return aux;
         }
-        if(Pai->esq == NULL){
+        else if (Pai->esq == NULL) {
             Arv* aux = Pai->dir;
             free(Pai);
             return aux;
         }
+
         Arv* aux = Pai->dir;
-        while(aux->esq != NULL){
+        while (aux->esq != NULL) {
             aux = aux->esq;
         }
-        Pai->venda = aux->venda;
+
+        Pai->venda = aux->venda; 
         Pai->dir = removeVenda(Pai->dir, aux->venda.id);
     }
     return Pai;
 }
 
-Arv * buscaID(Arv *Pai, int ID){
-    if(Pai == NULL){
-        return NULL;
-    }
-    if(ID > Pai->venda.id && Pai->dir != NULL){
-       return buscaID(Pai->dir, ID);
-    }
-    if(ID < Pai->venda.id && Pai->esq != NULL){
-       return buscaID(Pai->esq, ID);
-    }
-    if(ID == Pai->venda.id){
-        return Pai;
-    }
-}
-
 void imprimir_in_order(Arv *pai)
 {
-    if (pai->dir != NULL)
-    {
-        imprimir_in_order(pai->dir);
-    }
-    printf(" %0.2f", pai->venda.valor);
     if (pai->esq != NULL)
     {
         imprimir_in_order(pai->esq);
+    }
+    printf(" %0.2f", pai->venda.valor);
+    if (pai->dir != NULL)
+    {
+        imprimir_in_order(pai->dir);
     }
 }
 
