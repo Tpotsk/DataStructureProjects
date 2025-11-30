@@ -235,6 +235,78 @@ int QuantidadeDeVendas(Arv *r) {
     return quantidade;
 }
 
+int ComparaId(Arv *r, int v){
+    if (r == NULL){return 0;}
+
+    if (v == r->venda.id){return 1;}
+
+    if (v > r->venda.id){
+        return ComparaId(r->dir, v);
+    }
+    else {
+        return ComparaId(r->esq, v);
+    }
+}
+
+int IdAleatorio(){
+    srand(time(NULL));
+
+    int min = 1000;
+    int max = 9999;
+
+    int gerado;
+
+        gerado = min + rand() % (max - min + 1);
+
+    return gerado;
+}
+
+int gerarMatricula() {
+        srand(time(NULL));
+
+    int min = 0;
+    int max = 999;
+
+    int gerado;
+
+        gerado = min + rand() % (max - min + 1);
+
+    return gerado;
+}
+
+
+void InserirVenda(Arv *r) {
+    Venda nova;
+    int NovoId;
+    do{
+    NovoId = IdAleatorio();
+    }while (ComparaId(r, NovoId));IdAleatorio()
+    novo.id = NovoId;
+
+    printf("\nDigite o nome do cliente: ");
+    fgets(novo.cliente,50,stdin);
+
+    printf("\nDigite o nome do vendedor: ");
+    fgets(novo.vendedor,50,stdin);
+
+    int gerado = gerarMatricula;
+    sprintf(novo.matricula, "V%03d", gerado);
+
+    printf("Dia da transacao: ");
+    scanf("%d", &nova.dt_transacao.dia);
+
+    printf("Mes da transacao: ");
+    scanf("%d", &nova.dt_transacao.mes);
+
+    printf("Ano da transacao: ");
+    scanf("%d", &nova.dt_transacao.ano);
+
+    printf("\nDigite o valor da venda (ex: 199.99): \n\n $");
+    scanf("%f", &novo.valor);
+    getchar();
+
+}
+
 int main(){
     system("cls");
     int controle = 1;
@@ -283,7 +355,21 @@ int main(){
             case 1: {                                       // INSERIR NOVA VENDA
                 system("cls");
                 cabecalho();
-                printf("\nfuncionalidade -> inserir vendas\n");
+
+                printf("Nome do cliente: ");
+
+                printf("Nome do vendedor: ");
+
+                printf("Matricula do vendedor: ");
+
+                printf("Dia da transacao: ");
+
+                printf("Mes da transacao: ");
+
+                printf("Ano da transacao: ");
+
+                printf("Valor da venda: ");
+
                 system("pause");
                 system("cls");
 
@@ -442,7 +528,19 @@ int main(){
             case 6: {                                       // REMOVER VENDA
                 system("cls");
                 cabecalho();
-                printf("\nfuncionalidade -> remover vendas\n");
+
+
+                int idRemover;
+                printf("Digite o ID da venda a remover: ");
+                scanf("%d", &idRemover);
+
+                if (ComparaId(venda, idRemover) == 0) {
+                    printf("ID %d nao encontrado. Nenhuma venda removida.\n", idRemover);
+                } else {
+                    raiz = removeVenda(venda, idRemover);
+                    printf("Venda removida com sucesso!\n");
+                }
+
                 system("pause");
                 system("cls");
                 break;
