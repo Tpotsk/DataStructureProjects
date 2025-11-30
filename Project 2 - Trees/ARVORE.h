@@ -91,6 +91,21 @@ Arv* removeVenda(Arv* Pai, int ID) {
     return Pai;
 }
 
+Arv* buscarID(Arv* Pai, int ID) {
+    if (Pai == NULL) {
+        return NULL;
+    }
+
+    if (ID > Pai->venda.id) {
+        return buscarID(Pai->dir, ID);
+    }
+    else if (ID < Pai->venda.id) {
+        return buscarID(Pai->esq, ID);
+    }
+    else {
+        return Pai;
+    }
+}
 void imprimir_in_order(Arv *pai)
 {
     if (pai->esq != NULL)
