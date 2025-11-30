@@ -1,6 +1,6 @@
 #include <time.h>
 #include <stdio.h>
-#include <conio.h>
+//#include <conio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ARVORE.h"
@@ -118,7 +118,6 @@ void ExibirEstatisticas(int quantidade, float faturamento) {
     printf("\n\n");
 }
 
-// Funções lógicas
 void EntradaDeString(char *str) {
     int flag = 0;
 
@@ -250,6 +249,7 @@ Data criarData(){
     time(&segundos);
     data_local = localtime(&segundos);
 
+    printf("\n"NEGRITO"Data da Venda\n"RESET);
     do {
         printf("\nInsira o Ano da Venda:\n> ");
         err = scanf("%i", &ano);
@@ -257,13 +257,13 @@ Data criarData(){
     } while (ano < 0 || ano > (data_local->tm_year + 1900) || err == 0);
 
     do {
-        printf("\nInsira o Mes de Nascimento:\n> ");
+        printf("\nInsira o Mes da Venda:\n> ");
         err = scanf("%i", &mes);
         limparBufferEntrada();
     } while (mes < 1 || mes > 12 || err == 0);
 
     do {
-        printf("\nInsira o Dia de Nascimento:\n> ");
+        printf("\nInsira o Dia da Venda:\n> ");
         err = scanf("%i", &dia);
         limparBufferEntrada();
     } while (dia < 0 || dia > 30 || err == 0);
@@ -307,7 +307,7 @@ int gerarMatricula() {
 }
 
 
-void InserirVenda(Arv *r) {
+Arv* InserirVenda(Arv *r) {
     Venda venda;
     int NovoId, n_matricula;
     do {
@@ -316,23 +316,44 @@ void InserirVenda(Arv *r) {
 
     venda.id = NovoId;
     limparBufferEntrada();
-    printf("\nDigite o nome do cliente:\n");
+    printf("\n"CIANO"Digite o nome do cliente:\n"RESET);
     EntradaDeString(venda.cliente);
 
-    printf("\nDigite o nome do vendedor:\n");
+    printf("\n"CIANO"Digite o nome do vendedor:\n"RESET);
     EntradaDeString(venda.vendedor);
 
-    n_matricula = gerarMatricula();
+    int opcaomatricula;
+    printf("\n"NEGRITO"Matricula do vendedor:\n"RESET);
+    printf("\n\tGerar uma matricula aleatoria     "CIANO"(PRESSIONE 1)"RESET);
+    printf("\n\tInserir manualmente a matricula   "CIANO"(PRESSIONE 2)\n\n"RESET);
+
+    do {
+        printf("> ");
+        scanf("%d", &opcaomatricula);
+        limparBufferEntrada();
+    } while (opcaomatricula < 1 || opcaomatricula > 2);
+
+    if (opcaomatricula == 1) {
+        n_matricula = gerarMatricula();
+    } else {
+        do {
+            printf("\nInsira o número de matricula do vendedor (0-999):\n> ");
+            scanf("%d", &n_matricula);
+            limparBufferEntrada();
+        } while (n_matricula < 0 || n_matricula > 999);
+    }
+
     sprintf(venda.matricula, "V%03d", n_matricula);
 
     venda.dt_transacao = criarData();
 
     do {
-        printf("\nDigite o valor da venda (ex: 199.99): \n\n $");
+        printf("\n"AZUL"Digite o valor da venda (ex: 199.99): \n\n$"RESET);
         scanf("%f", &venda.valor);
     } while (venda.valor < 0);
 
     r = insere(r, venda);
+    return r;
 }
 
 int main(){
@@ -340,25 +361,7 @@ int main(){
     int controle = 1;
     char input_servico;
 
-    Arv *vendas = NULL;
-
-    Venda vendasTeste[] = {
-        {1001, "Comprador 1", "Vendedor 1", "V001", {15, 5, 2024}, 150.75},
-        {1002, "Comprador 2", "Vendedor 2", "V002", {16, 5, 2024}, 89.90},
-        {1003, "Comprador 3", "Vendedor 1", "V001", {17, 5, 2024}, 220.50},
-        {1004, "Comprador 4", "Vendedor 3", "V003", {18, 5, 2024}, 75.25},
-        {1005, "Comprador 5", "Vendedor 2", "V002", {19, 5, 2024}, 310.00},
-        {1006, "Comprador 6", "Vendedor 4", "V004", {20, 5, 2024}, 125.80},
-        {1007, "Comprador 7", "Vendedor 3", "V003", {21, 5, 2024}, 95.60},
-        {1008, "Comprador 8", "Vendedor 1", "V001", {22, 5, 2024}, 180.30}
-    };
-
-    int numVendasTeste = sizeof(vendasTeste) / sizeof(vendasTeste[0]);
-
-    for(int i = 0; i < numVendasTeste; i++) {
-        vendas = insere(vendas, vendasTeste[i]);
-    }
-        
+    Arv *vendas = NULL;  
 
     while(controle){
         cabecalho();
@@ -371,20 +374,21 @@ int main(){
         }while(controle < 1 || controle > 7);
 
         switch(controle) {
-            case 1: {                                       // INSERIR NOVA VENDA
+            case 1: {
                 system("cls");
                 cabecalho();
-                InserirVenda(vendas);
+                vendas = InserirVenda(vendas);
+                printf("\n"CIANO"Venda inserida com sucesso!"RESET);
                 system("pause");
                 system("cls");
                 break;
             }
 
-            case 2: {                                       // LISTAR TODAS AS VENDAS
+            case 2: {
                 system("cls");
                 cabecalho();
 
-                printf("\nListar vendas de maneira >");
+                printf("\n"NEGRITO"Listar vendas de maneira:\n"RESET);
                 printf("\n\tCrescente   "CIANO"(PRESSIONE 1)"RESET);
                 printf("\n\tDecrescente "CIANO"(PRESSIONE 2)\n\n"RESET);
 
@@ -413,7 +417,7 @@ int main(){
                 break;
             }
 
-            case 3: {                                       // BUSCAR VENDA POR VENDEDOR
+            case 3: {
                 system("cls");
                 cabecalho();
 
@@ -426,14 +430,12 @@ int main(){
                 char buscarPor[51];
                 char *resultadoBusca;
 
-                do{
-                    printf(">");
-                    scanf("%d", &opcao);
-                    limparBufferEntrada();
-                } while(opcao != 1 && opcao != 2);
+                printf(">");
+                scanf("%d", &opcao);
+                limparBufferEntrada();
 
                 if(opcao == 1) {
-                    printf("\nInsira o nome do vendedor\n");
+                    printf("\n"NEGRITO"Insira o nome do vendedor\n"RESET);
                     EntradaDeString(buscarPor);
 
                     system("cls");
@@ -449,7 +451,7 @@ int main(){
                         ExibirVendasPorMatricula(vendas, resultadoBusca);
                         FecharVenda2();
                     } else {
-                        printf("\nNao ha vendedor com esse nome nos registros.\n\n");
+                        printf("\n"VERMELHO"Nao ha vendedor com esse nome nos registros.\n\n"RESET);
                     }
                 } else if(opcao == 2) {
                     printf("\nInsira a matricula do vendedor\n");
@@ -468,8 +470,10 @@ int main(){
                         ExibirVendasPorMatricula(vendas, buscarPor);
                         FecharVenda2();
                     } else {
-                        printf("\nNao ha vendedor com essa matricula nos registros.\n\n");
+                        printf("\n"VERMELHO"Nao ha vendedor com essa matricula nos registros.\n\n"RESET);
                     }
+                } else {
+                    printf("\n"VERMELHO"Operacao cancelada!\n\n"RESET);
                 }
 
                 system("pause");
@@ -478,11 +482,11 @@ int main(){
                 break;
             }
 
-            case 4: {                                       // LISTAR VENDAS ACIMA OU ABAIXO DE UM VALOR
+            case 4: {
                 system("cls");
                 cabecalho();
 
-                printf("\nBuscar Vendas que >");
+                printf("\n"NEGRITO"Buscar Vendas\n"RESET);
                 printf("\n\tMenor que "CIANO"(PRESSIONE 1)"RESET);
                 printf("\n\tMaior que "CIANO"(PRESSIONE 2)\n\n"RESET);
 
@@ -490,13 +494,13 @@ int main(){
                 float valor = 0.0f;
 
                 do{
-                    printf(">");
+                    printf("> ");
                     scanf("%d", &opcao);
                     limparBufferEntrada();
                 } while(opcao != 1 && opcao != 2);
 
                 do{
-                    printf("\nInsira o valor a ser tomado como parametro:\n> ");
+                    printf("\n"CIANO"Insira o valor a ser tomado como parametro:\n> "RESET);
                     scanf("%f", &valor);
                     limparBufferEntrada();
                 } while(valor < 0);
@@ -517,7 +521,7 @@ int main(){
                 break;
             }
 
-            case 5: {                                       // EXIBIR ESTATISTICAS
+            case 5: {                                      
                 system("cls");
                 cabecalho();
                 printf("\n");
@@ -532,7 +536,7 @@ int main(){
                 break;
             }
 
-            case 6: {                                       // REMOVER VENDA
+            case 6: {                                       
                 system("cls");
                 cabecalho();
                 printf("\n");
@@ -547,12 +551,12 @@ int main(){
                 }while(idRemover < 1000 || idRemover > 9999);
                 
                 if (ComparaId(vendas, idRemover) == 0) {
-                    printf("\nID %d nao encontrado. Nenhuma venda removida.\n", idRemover);
+                    printf("\n"VERMELHO"ID %d nao encontrado. Nenhuma venda removida.\n"RESET, idRemover);
                 } else {
                     Arv* aux = buscarID(vendas, idRemover);
                     ExibirVenda1(aux->venda);
                     vendas = removeVenda(vendas, idRemover);
-                    printf("\nVenda removida com sucesso!\n");
+                    printf("\n"VERDE"Venda removida com sucesso!\n"RESET);
                 }
 
                 system("pause");
@@ -560,7 +564,7 @@ int main(){
                 break;
             }
 
-            case 7: {                                       // FINALIZAR
+            case 7: {                                       
                 controle = 0;
                 break;
             }
