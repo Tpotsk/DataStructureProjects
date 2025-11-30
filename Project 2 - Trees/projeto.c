@@ -1,5 +1,6 @@
+#include <time.h>
 #include <stdio.h>
-#include <conio.h>
+//#include <conio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ARVORE.h"
@@ -235,6 +236,43 @@ int QuantidadeDeVendas(Arv *r) {
     return quantidade;
 }
 
+void limparBufferEntrada() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+Data criarData(){
+    int ano,mes,dia;
+    int err;
+    Data info;
+    struct tm *data_local;
+    time_t segundos;
+    time(&segundos);
+    data_local = localtime(&segundos);
+
+    do {
+        printf("\nInsira o Ano da Venda:\n> ");
+        err = scanf("%i", &ano);
+        limparBufferEntrada();
+    } while (ano < 0 || ano > (data_local->tm_year + 1900) || err == 0);
+
+    do {
+        printf("\nInsira o Mes de Nascimento:\n> ");
+        err = scanf("%i", &mes);
+        limparBufferEntrada();
+    } while (mes < 1 || mes > 12 || err == 0);
+
+    do {
+        printf("\nInsira o Dia de Nascimento:\n> ");
+        err = scanf("%i", &dia);
+        limparBufferEntrada();
+    } while (dia < 0 || dia > 30 || err == 0);
+    info.ano = ano;
+    info.mes = mes;
+    info.dia = dia;
+    return info;
+}
+
 int ComparaId(Arv *r, int v){
     if (r == NULL){return 0;}
 
@@ -255,56 +293,46 @@ int IdAleatorio(){
     int max = 9999;
 
     int gerado;
-
-        gerado = min + rand() % (max - min + 1);
-
+    gerado = min + rand() % (max - min + 1);
     return gerado;
 }
 
 int gerarMatricula() {
-        srand(time(NULL));
-
+    srand(time(NULL));
     int min = 0;
     int max = 999;
-
     int gerado;
-
-        gerado = min + rand() % (max - min + 1);
-
+    gerado = min + rand() % (max - min + 1);
     return gerado;
 }
 
 
 void InserirVenda(Arv *r) {
-    Venda nova;
-    int NovoId;
-    do{
-    NovoId = IdAleatorio();
-    }while (ComparaId(r, NovoId));IdAleatorio()
-    novo.id = NovoId;
+    Venda venda;
+    int NovoId, n_matricula;
+    do {
+        NovoId = IdAleatorio();
+    }while (ComparaId(r, NovoId));
 
-    printf("\nDigite o nome do cliente: ");
-    fgets(novo.cliente,50,stdin);
+    venda.id = NovoId;
+    limparBufferEntrada();
+    printf("\nDigite o nome do cliente:\n");
+    EntradaDeString(venda.cliente);
 
-    printf("\nDigite o nome do vendedor: ");
-    fgets(novo.vendedor,50,stdin);
+    printf("\nDigite o nome do vendedor:\n");
+    EntradaDeString(venda.vendedor);
 
-    int gerado = gerarMatricula;
-    sprintf(novo.matricula, "V%03d", gerado);
+    n_matricula = gerarMatricula();
+    sprintf(venda.matricula, "V%03d", n_matricula);
 
-    printf("Dia da transacao: ");
-    scanf("%d", &nova.dt_transacao.dia);
+    venda.dt_transacao = criarData();
 
-    printf("Mes da transacao: ");
-    scanf("%d", &nova.dt_transacao.mes);
+    do {
+        printf("\nDigite o valor da venda (ex: 199.99): \n\n $");
+        scanf("%f", &venda.valor);
+    } while (venda.valor < 0);
 
-    printf("Ano da transacao: ");
-    scanf("%d", &nova.dt_transacao.ano);
-
-    printf("\nDigite o valor da venda (ex: 199.99): \n\n $");
-    scanf("%f", &novo.valor);
-    getchar();
-
+    r = insere(r, venda);
 }
 
 int main(){
@@ -314,11 +342,6 @@ int main(){
 
     Arv *vendas = NULL;
 
-
-     // ==================================================
-    // TRECHO ISOLADO PARA POPULAR A ÁRVORE COM DADOS DE TESTE
-    // ==================================================
-    {
     Venda vendasTeste[] = {
         {1001, "Comprador 1", "Vendedor 1", "V001", {15, 5, 2024}, 150.75},
         {1002, "Comprador 2", "Vendedor 2", "V002", {16, 5, 2024}, 89.90},
@@ -330,23 +353,19 @@ int main(){
         {1008, "Comprador 8", "Vendedor 1", "V001", {22, 5, 2024}, 180.30}
     };
 
-        int numVendasTeste = sizeof(vendasTeste) / sizeof(vendasTeste[0]);
+    int numVendasTeste = sizeof(vendasTeste) / sizeof(vendasTeste[0]);
 
-        for(int i = 0; i < numVendasTeste; i++) {
-                vendas = insere(vendas, vendasTeste[i]);
-            }
-        }
-    // ==================================================
-    // FIM DO TRECHO DE POPULAÇÃO
-    // ==================================================
-
+    for(int i = 0; i < numVendasTeste; i++) {
+        vendas = insere(vendas, vendasTeste[i]);
+    }
+        
 
     while(controle){
         cabecalho();
         MenuOpcoes();
 
         do{
-            input_servico = getch(stdin);
+            input_servico = getc(stdin);
             controle = input_servico - '0';
             printf("%d", controle);
         }while(controle < 1 || controle > 7);
@@ -355,24 +374,9 @@ int main(){
             case 1: {                                       // INSERIR NOVA VENDA
                 system("cls");
                 cabecalho();
-
-                printf("Nome do cliente: ");
-
-                printf("Nome do vendedor: ");
-
-                printf("Matricula do vendedor: ");
-
-                printf("Dia da transacao: ");
-
-                printf("Mes da transacao: ");
-
-                printf("Ano da transacao: ");
-
-                printf("Valor da venda: ");
-
+                InserirVenda(vendas);
                 system("pause");
                 system("cls");
-
                 break;
             }
 
@@ -389,6 +393,7 @@ int main(){
                 do{
                     printf(">");
                     scanf("%d", &opcao);
+                    limparBufferEntrada();
                 } while(opcao != 1 && opcao != 2);
 
                 printf("\n");
@@ -424,9 +429,8 @@ int main(){
                 do{
                     printf(">");
                     scanf("%d", &opcao);
+                    limparBufferEntrada();
                 } while(opcao != 1 && opcao != 2);
-
-                 getchar();
 
                 if(opcao == 1) {
                     printf("\nInsira o nome do vendedor\n");
@@ -488,10 +492,14 @@ int main(){
                 do{
                     printf(">");
                     scanf("%d", &opcao);
+                    limparBufferEntrada();
                 } while(opcao != 1 && opcao != 2);
 
-                printf("\nInsira o valor a ser tomado como parametro >");
-                scanf("%f", &valor);
+                do{
+                    printf("\nInsira o valor a ser tomado como parametro:\n> ");
+                    scanf("%f", &valor);
+                    limparBufferEntrada();
+                } while(valor < 0);
 
                 system("cls");
                 cabecalho();
@@ -506,7 +514,6 @@ int main(){
                 FecharVenda1();
                 system("pause");
                 system("cls");
-
                 break;
             }
 
@@ -528,29 +535,33 @@ int main(){
             case 6: {                                       // REMOVER VENDA
                 system("cls");
                 cabecalho();
-
-
+                printf("\n");
+                ExibirVendasCrescente(vendas);
+                
+                printf("\n\n");
                 int idRemover;
-                printf("Digite o ID da venda a remover: ");
-                scanf("%d", &idRemover);
-
-                if (ComparaId(venda, idRemover) == 0) {
-                    printf("ID %d nao encontrado. Nenhuma venda removida.\n", idRemover);
+                do {
+                    printf("Digite o ID da venda a remover: \n> ");
+                    scanf("%d", &idRemover);
+                    limparBufferEntrada();
+                }while(idRemover < 1000 || idRemover > 9999);
+                
+                if (ComparaId(vendas, idRemover) == 0) {
+                    printf("\nID %d nao encontrado. Nenhuma venda removida.\n", idRemover);
                 } else {
-                    raiz = removeVenda(venda, idRemover);
-                    printf("Venda removida com sucesso!\n");
+                    Arv* aux = buscarID(vendas, idRemover);
+                    ExibirVenda1(aux->venda);
+                    vendas = removeVenda(vendas, idRemover);
+                    printf("\nVenda removida com sucesso!\n");
                 }
 
                 system("pause");
                 system("cls");
                 break;
-
-                break;
             }
 
             case 7: {                                       // FINALIZAR
                 controle = 0;
-
                 break;
             }
 
