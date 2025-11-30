@@ -64,7 +64,7 @@ void ExibirVenda1(Venda venda) {               // usado pra exibir as vendas na 
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 53);
     sequenciaDeChar(0xC5, 0xC4, 0xC4, 14);
     sequenciaDeChar(0xC5, 0xC4, 0xB4, 14);
-    printf("\n%c %4d %c %-50s %c %-10s %c %-50s %c %2d/%2d/%-5d %c %-10.2f %c\n", 0xB3, venda.id, 0xB3, venda.vendedor, 0xB3, venda.matricula, 0xB3, venda.cliente, 0xB3, venda.dt_transacao.dia, venda.dt_transacao.mes, venda.dt_transacao.ano, 0xB3, venda.valor, 0xB3);
+    printf("\n%c %4d %c %-50s %c %-9s %c %-50s %c %2d/%2d/%-5d %c %-10.2f %c\n", 0xB3, venda.id, 0xB3, venda.vendedor, 0xB3, venda.matricula, 0xB3, venda.cliente, 0xB3, venda.dt_transacao.dia, venda.dt_transacao.mes, venda.dt_transacao.ano, 0xB3, venda.valor, 0xB3);
 }
 
 void FecharVenda1(){
@@ -361,7 +361,7 @@ int main(){
     int controle = 1;
     char input_servico;
 
-    Arv *vendas = NULL;  
+    Arv *vendas = NULL;
 
     while(controle){
         cabecalho();
@@ -424,7 +424,6 @@ int main(){
                 printf("\nRealizar busca atraves de >");
                 printf("\n\tNome do vendedor      "CIANO"(PRESSIONE 1)"RESET);
                 printf("\n\tMatricula do vendedor "CIANO"(PRESSIONE 2)\n\n"RESET);
-                printf("\n\tCancelar              "VERMELHO"(PRESSIONE OUTRO)\n\n"RESET);
 
                 int opcao = 0;
                 char buscarPor[51];
@@ -521,7 +520,7 @@ int main(){
                 break;
             }
 
-            case 5: {                                      
+            case 5: {
                 system("cls");
                 cabecalho();
                 printf("\n");
@@ -536,12 +535,15 @@ int main(){
                 break;
             }
 
-            case 6: {                                       
+            case 6: {
                 system("cls");
                 cabecalho();
                 printf("\n");
+
+                CabecalhoVenda1();
                 ExibirVendasCrescente(vendas);
-                
+                FecharVenda1();
+
                 printf("\n\n");
                 int idRemover;
                 do {
@@ -549,12 +551,14 @@ int main(){
                     scanf("%d", &idRemover);
                     limparBufferEntrada();
                 }while(idRemover < 1000 || idRemover > 9999);
-                
+
                 if (ComparaId(vendas, idRemover) == 0) {
                     printf("\n"VERMELHO"ID %d nao encontrado. Nenhuma venda removida.\n"RESET, idRemover);
                 } else {
                     Arv* aux = buscarID(vendas, idRemover);
+                    CabecalhoVenda1();
                     ExibirVenda1(aux->venda);
+                    FecharVenda1();
                     vendas = removeVenda(vendas, idRemover);
                     printf("\n"VERDE"Venda removida com sucesso!\n"RESET);
                 }
@@ -564,7 +568,7 @@ int main(){
                 break;
             }
 
-            case 7: {                                       
+            case 7: {
                 controle = 0;
                 break;
             }
